@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from flier.models import BaseModel, BaseMessage
+from flier.models import BaseModel, BaseMessage, BaseSender
 import managers
 import methods
 
@@ -27,7 +27,7 @@ class Service(BaseModel, methods.Service):
         return self.name
 
 
-class Source(BaseModel, methods.Source):
+class Source(BaseModel, BaseSender, methods.Source):
     service = models.ForeignKey(
         Service, null=True, blank=True, default=None, )
 

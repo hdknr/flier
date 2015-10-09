@@ -31,3 +31,10 @@ class BaseMessage(models.Model):
 
     class Meta:
         abstract = True
+
+
+class BaseSender(models.Model):
+
+    class Meta:
+        abstract = True
+

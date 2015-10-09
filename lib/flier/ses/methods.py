@@ -5,6 +5,7 @@ from enum import Enum
 import boto
 import requests
 import aws
+import backends
 
 import traceback
 import logging
@@ -52,8 +53,12 @@ class Service(object):
 
 class Source(object):
     @property
-    def connectiont(self):
+    def connection(self):
         return self.service.connection
+
+    @property
+    def backend(self):
+        return backends.SesBackend(connection=self.connection)
 
     def cert(self, url):
         return self.service.cert(url)
