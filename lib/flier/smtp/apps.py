@@ -5,5 +5,5 @@ from django.utils.translation import (
 
 
 class AppConfig(DjangoAppConfig):
-    name = 'smtp'
+    name = 'flier.smtp'
     verbose_name = _("Flier SMTP")

@@ -107,6 +107,7 @@ INSTALLED_APPS += (
     'flier',
     'flier.ses',
     'flier.mails',
+    'flier.smtp',
 )
 import loggings
 LOGGING = loggings.LOGGING

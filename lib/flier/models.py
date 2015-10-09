@@ -37,4 +37,3 @@ class BaseSender(models.Model):
 
     class Meta:
         abstract = True
-
