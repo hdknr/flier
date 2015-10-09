@@ -1,4 +1,4 @@
-flier - Promotion Tool
+flier - Emails Promotion 
 ====================================
 
 - under development

@@ -1,9 +1,0 @@
-django
-MySQL-python
-phpserialize
-enum34
-south
-openpyxl
--e git+https://github.com/hdknr/ua.git#egg=ua
--e git+https://github.com/hdknr/djado.git#egg=djado
--e git+https://github.com/hdknr/pycommand.git#egg=pycommand

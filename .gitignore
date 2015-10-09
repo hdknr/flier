@@ -2,3 +2,10 @@
 *.egg-info
 .*.swp
 *.sqlite3
+web/static/
+web/logs/
+web/upload/
+.ropeproject
+migrations
+assets
+build
