@@ -74,7 +74,7 @@ class Topic(BaseModel):
             self.get_topic_display())
 
 
-class Notification(BaseModel, methods.Notification):
+class Notification(BaseModel, BaseMessage, methods.Notification):
     topic = models.ForeignKey(
         Topic, null=True, blank=True, default=None, )
 

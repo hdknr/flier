@@ -1,29 +1,29 @@
 from __future__ import absolute_import
 from django.dispatch import receiver
-import models
+from flier.models import BaseMessage
 
 import logging
 logger = logging.getLogger('flier.mails')
 
 
-@receiver(models.BaseMessage.confirm_signal, sender=models.BaseMessage)
+@receiver(BaseMessage.confirm_signal)
 def confirm(instance, *args, **kwargs):
     # access url # TODO: error logging
-    pass
+    print "confirm"
 
 
-@receiver(models.BaseMessage.bounce_signal, sender=models.BaseMessage)
+@receiver(BaseMessage.bounce_signal)
 def bounce(instance, *args, **kwargs):
     # TODO: signal bounce
-    pass
+    print "bounce"
 
 
-@receiver(models.BaseMessage.delivery_signal, sender=models.BaseMessage)
+@receiver(BaseMessage.delivery_signal)
 def delivery(instance, *args, **kwargs):
     # TODO: most of cases, delete notification
-    pass
+    print "delivery"
 
 
-@receiver(models.BaseMessage.complaint_signal, sender=models.BaseMessage)
+@receiver(BaseMessage.complaint_signal)
 def complaint(instance, *args, **kwargs):
-    pass
+    print 'complaint'

@@ -104,5 +104,7 @@ STATIC_URL = '/static/'
 TIME_ZONE = 'Asia/Tokyo'
 LANGUAGE_CODE = 'ja'
 INSTALLED_APPS += (
+    'flier',
     'flier.ses',
+    'flier.mails',
 )
