@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from flier.models import BaseModel
+from flier.models import BaseModel, BaseMessage
 import managers
 import methods
 

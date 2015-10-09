@@ -100,3 +100,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+###
+TIME_ZONE = 'Asia/Tokyo'
+LANGUAGE_CODE = 'ja'
+INSTALLED_APPS += (
+    'flier.ses',
+)

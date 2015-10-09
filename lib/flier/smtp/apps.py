@@ -5,5 +5,5 @@ from django.utils.translation import (
 
 
 class AppConfig(DjangoAppConfig):
-    name = 'ses'
-    verbose_name = _("Flier SES")
+    name = 'smtp'
+    verbose_name = _("Flier SMTP")

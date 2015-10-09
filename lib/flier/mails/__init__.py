@@ -6,4 +6,4 @@ __build__ = ''
 def get_version():
     return '.'.join(map(lambda v: str(v), __version__))
 
-default_app_config = 'flier.ses.apps.AppConfig'
+default_app_config = 'flier.mails.apps.AppConfig'

@@ -5,5 +5,8 @@ from django.utils.translation import (
 
 
 class AppConfig(DjangoAppConfig):
-    name = 'ses'
-    verbose_name = _("Flier SES")
+    name = 'mails'
+    verbose_name = _("Flier Mails")
+
+    def ready(self):
+        import tasks        # NOQA

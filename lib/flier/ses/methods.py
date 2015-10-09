@@ -1,4 +1,3 @@
-from django.dispatch import dispatcher
 import json
 from datetime import datetime
 from enum import Enum
@@ -72,10 +71,6 @@ class Source(object):
 
 
 class Notification(object):
-    bounce_signal = dispatcher.Signal(providing_args=["instance", ])
-    delivery_signal = dispatcher.Signal(providing_args=["instance", ])
-    complaint_signal = dispatcher.Signal(providing_args=["instance", ])
-    confirm_signal = dispatcher.Signal(providing_args=["instance", ])
 
     @property
     def message_object(self):
