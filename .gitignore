@@ -3,6 +3,7 @@
 *.sqlite3
 *.pyc
 *.egg-info
+*.log
 migrations
 assets
 docs/_build

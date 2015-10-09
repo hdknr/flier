@@ -108,3 +108,5 @@ INSTALLED_APPS += (
     'flier.ses',
     'flier.mails',
 )
+import loggings
+LOGGING = loggings.LOGGING

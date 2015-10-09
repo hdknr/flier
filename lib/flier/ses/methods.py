@@ -4,8 +4,11 @@ from enum import Enum
 
 import boto
 import requests
-
 import aws
+
+import traceback
+import logging
+logger = logging.getLogger('flier.ses')
 
 
 class BaseObjectSerializer(json.JSONEncoder):
@@ -123,8 +126,16 @@ class Notification(object):
         try:
             signal and signal.send(sender=type(self), instance=self)
         except:
-            # TODO: error logging
-            pass
+            logger.error(traceback.format_exc())
+
+    def confirm(self):
+        self.message_object.confirm_subscribe_url()
+
+    def get_address_list(self):
+        return self.message_object.get_address_list()
+
+    def get_message(self):
+        return self.message
 
 
 class Certificate(object):

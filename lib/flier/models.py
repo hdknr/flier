@@ -29,8 +29,5 @@ class BaseMessage(models.Model):
     complaint_signal = dispatcher.Signal(providing_args=["instance", ])
     confirm_signal = dispatcher.Signal(providing_args=["instance", ])
 
-    def get_address_list(self):
-        return []
-
     class Meta:
         abstract = True

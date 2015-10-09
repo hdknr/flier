@@ -100,6 +100,10 @@ class SnsMessage(BaseMessage):
         return verify_pycrypto(
             cert, self.singin_input, self.Signature)
 
+    def get_address_list(self):
+        print "@@@ SNS"
+        return self.Message.get_address_list()
+
 
 class SesMessage(BaseMessage):
     '''
@@ -149,6 +153,20 @@ class SesMessage(BaseMessage):
 
         return getattr(self, '_complaint', _cache())
 
+    def get_address_list(self):
+        print "@@@@@ SES notfification type:", self.notificationType
+
+        if self.notificationType == 'Bounce':
+            return self.bounce.get_address_list()
+
+        if self.notificationType == 'Complaint':
+            return self.complaint.get_address_list()
+
+        if self.notificationType == 'Delivery':
+            return self.delivery.recipients
+
+        return []
+
 
 class BounceMessage(BaseMessage):
     '''
@@ -168,6 +186,9 @@ class BounceMessage(BaseMessage):
 
         return getattr(self, '_bouncedRecipients', _cache(self))
 
+    def get_address_list(self):
+        return [r.emailAddress for r in self.bouncedRecipients]
+
 
 class ComplaintMessage(BaseMessage):
     '''
@@ -186,3 +207,6 @@ class ComplaintMessage(BaseMessage):
             return self._bouncedRecipients
 
         return getattr(self, '_complainedRecipients', _cache(self))
+
+    def get_address_list(self):
+        return [r.emailAddress for r in self.complainedRecipients]
