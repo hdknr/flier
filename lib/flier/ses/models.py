@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from flier.models import BaseModel, BaseMessage, BaseSender
+from flier.models import BaseModel, BaseMessage, Sender
 import managers
 import methods
 
@@ -27,11 +27,9 @@ class Service(BaseModel, methods.Service):
         return self.name
 
 
-class Source(BaseModel, BaseSender, methods.Source):
+class Source(Sender, methods.Source):
     service = models.ForeignKey(
         Service, null=True, blank=True, default=None, )
-
-    address = models.EmailField(_('Address'), max_length=100)
 
     arn = models.CharField(
         _('Source Identity Arn'), help_text=_('Source Identity Arn'),

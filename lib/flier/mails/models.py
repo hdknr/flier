@@ -4,83 +4,15 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-from flier.models import BaseModel
+from flier.models import BaseModel, Sender, Address
 from flier.mails import (
     methods, managers, fields,
 )
 
 
-class Address(BaseModel, methods.Address):
-    ''' Mail Address
-    '''
-    address = models.EmailField(
-        _('Email Address'),
-        help_text=_('Email Address Help'), max_length=50)
-
-    domain = models.CharField(
-        _('Email Domain'),
-        help_text=_('Email Domain Help'), max_length=50,
-        null=True, blank=True, default='',)
-
-    bounced = models.IntegerField(
-        _('Bounced Count'),
-        help_text=_('Bounced Count Help'), default=0)
-
-    enabled = models.BooleanField(
-        _('Enabled Address'), help_text=_('Enabled Address Help'),
-        default=True)
-
-    class Meta:
-        verbose_name = _('Mail Address')
-        verbose_name_plural = _('Mail Address')
-
-    def __unicode__(self):
-        return self.address
-
-    def save(self, *args, **kwargs):
-        if self.address and not self.domain:
-            self.domain = self.address.split('@')[1]
-        super(Address, self).save(*args, **kwargs)
-
-
-class Log(BaseModel, methods.Log):
-    address = models.ForeignKey(Address)
-    signal = models.CharField(_('Log Signal'), max_length=50)
-    message = models.TextField(_('Log Message'))
-
-    class Meta:
-        verbose_name = _('Address Log')
-        verbose_name_plural = _('Address Log')
-
-
-class Service(BaseModel, methods.Service):
-    name = models.CharField(
-        _('Mail Service Name'), unique=True, max_length=50)
-
-    domain = models.CharField(
-        _('Mail Domain Name'), unique=True, max_length=50)
-
-    wait_every = models.IntegerField(
-        _('Wait sending for every count'),
-        help_text=_('Wait sending for every count help'),
-        default=0)
-
-    wait_ms = models.IntegerField(
-        _('Wait milliseconds'),
-        help_text=_('Wait milliseconds help'),
-        default=0)
-
-    class Meta:
-        verbose_name = _('Service')
-        verbose_name_plural = _('Service')
-
-    def __unicode__(self):
-        return self.name
-
-
 class BaseMail(BaseModel, methods.BaseMail):
-    sender = models.EmailField(
-        _('Mail Sender'), help_text=_('Mail Sender Help'), max_length=50)
+    sender = models.ForeignKey(
+        Sender, verbose_name=_('Mail Sender'), help_text=_('Mail Sender Help'))
 
     subject = models.TextField(
         _('Mail Subject'), help_text=_('Mail Subject Help'), )

@@ -1,23 +1,11 @@
 from django.utils.timezone import now, localtime
 # from django.utils.encoding import force_text
 from django import template
-from django.core.mail import EmailMultiAlternatives
+# from django.core.mail import EmailMultiAlternatives
 
 import uuid
 from datetime import timedelta
 import time
-
-
-class Address(object):
-    ''' Mail Address
-    '''
-    def bounce(self):
-        self.bounced += 1
-        self.save()
-
-
-class Log(object):
-    pass
 
 
 class Service(object):
@@ -72,26 +60,22 @@ class BaseMail(object):
             )))
 
     def create_message(
-            self, mail_address, encoding="utf-8",
-            connection=None):
-        # connection = Backend instance
-        # TODO: encoding depends on to.email domain actually
+            self, to, encoding="utf-8"):
+        '''
+        :param Recipient to:
+        '''
         message_id = uuid.uuid1().hex
-
-        EmailMultiAlternatives.encoding = encoding
-
-        message = EmailMultiAlternatives(
+        message = self.sender.create_message(
             subject=self.subject,
-            body=self.rendered_message(mail_address),
-            from_email=self.sender.address,
-            to=[mail_address.email],            # list of tuple
+            body=self.rendered_message(to.address),
+            to=[to],            # list of tuple
             headers={'Message-ID': message_id},
-            connection=connection,
+            connection=self.instance.backend,
         )
 
         if self.html:
             message.attach_alternative(
-                self.rendered_html(mail_address), "text/html")
+                self.rendered_html(to), "text/html")
 
         return message.message()
 

@@ -1,3 +1,4 @@
+from django.core.mail.message import EmailMultiAlternatives
 import json
 from datetime import datetime
 from enum import Enum
@@ -76,6 +77,13 @@ class Source(object):
         #verifying-a-sender-email-address
         '''
         self.connection.verify_email_address(address)
+
+    def create_message(self, *args, **kwargs):
+        return EmailMultiAlternatives(
+            from_email=self.address,            # Only Verified Address
+            connection=self.backend,            # IMPORTANT
+            *args, **kwargs
+        )
 
 
 class Notification(object):
