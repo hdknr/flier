@@ -2,7 +2,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import dispatcher
 
-import methods
+from flier import (methods, managers)
+import uuid
 
 
 class BaseModel(models.Model, methods.BaseModel):
@@ -52,7 +53,8 @@ class Address(BaseModel, methods.Address):
     '''
     address = models.EmailField(
         _('Email Address'),
-        help_text=_('Email Address Help'), max_length=50)
+        help_text=_('Email Address Help'), max_length=50,
+        unique=True, db_index=True)
 
     domain = models.CharField(
         _('Email Domain'),
@@ -80,11 +82,42 @@ class Address(BaseModel, methods.Address):
         super(Address, self).save(*args, **kwargs)
 
 
-class Log(BaseModel, methods.Log):
-    address = models.ForeignKey(Address)
-    signal = models.CharField(_('Log Signal'), max_length=50)
-    message = models.TextField(_('Log Message'))
+class Recipient(BaseModel, methods.Recipient):
+    '''Recipients for a Mail
+    '''
+    key = models.CharField(
+        _('Recipient Key'), help_text=_('Recipient Key'),
+        max_length=100, unique=True, db_index=True)
+
+    sender = models.ForeignKey(
+        Sender, verbose_name=_('Message Sender'),
+        help_text=_('Message Sender Help'))
+
+    to = models.ForeignKey(
+        Address, verbose_name=_('Recipient Address'),
+        help_text=_('Recipient Address Help'))
+
+    message_id = models.CharField(
+        _('Message ID'), max_length=100, null=True, db_index=True)
+
+    sent_at = models.DateTimeField(
+        _('Sent At to Reipient'), help_text=_('Sent At to Recipient Help'),
+        null=True, blank=True, default=None)
+
+    status = models.CharField(_('Recipient Status'), max_length=50)
+    message = models.TextField(
+        _('Recipient Message'), null=True, default=None, blank=True)
 
     class Meta:
-        verbose_name = _('Address Log')
-        verbose_name_plural = _('Address Log')
+        verbose_name = _('Recipient')
+        verbose_name_plural = _('Recipient')
+
+    objects = managers.RecipientQuerySet.as_manager()
+
+    def __unicode__(self):
+        return self.to.__unicode__()
+
+    def save(self, *args, **kwargs):
+        if not self.message_id:
+            self.message_id = uuid.uuid1().hex       # TODO: better id rules
+        super(Recipient, self).save(*args, **kwargs)

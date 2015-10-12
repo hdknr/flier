@@ -1,4 +1,6 @@
 from django.core.mail.message import EmailMultiAlternatives
+import backends
+import uuid
 
 
 class Domain(object):
@@ -32,10 +34,23 @@ class Alias(object):
 
 
 class Sender(object):
+    def verp(self):
+        return uuid.uuid1().hex + "." + self.address
+
+    @property
+    def backend(self):
+        return backends.SmtpBackend()
+
+    @property
+    def instance(self):
+        return self
+
     def create_message(self, *args, **kwargs):
-        from_email = ''         # TODO: return path
-        EmailMultiAlternatives.encoding = kwargs.get('enncoding',  None)
+        kwargs['from_email'] = self.verp()
+        headers = kwargs.get('headers', {})
+        headers['From'] = self.address
+        kwargs['headers'] = headers
+        EmailMultiAlternatives.encoding = kwargs.get('encoding',  None)
         return EmailMultiAlternatives(
-            from_email=from_email,       # may be VERP
-            *args, **kwargs
-        )
+            connection=self.backend,
+            *args, **kwargs)

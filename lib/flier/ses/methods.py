@@ -61,6 +61,10 @@ class Source(object):
     def backend(self):
         return backends.SesBackend(connection=self.connection)
 
+    @property
+    def instance(self):
+        return self
+
     def cert(self, url):
         return self.service.cert(url)
 

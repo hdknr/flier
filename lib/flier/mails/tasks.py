@@ -109,6 +109,7 @@ def send_mail(sender, mail):
 
     # active_set:
     #   - recipients already sent (sent_at is not None)are NOT included
+    # TOOD:   mail.get_active_set()
     recipients = mail.recipient_set.active_set()
 
     for recipient in recipients:

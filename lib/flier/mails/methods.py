@@ -3,7 +3,6 @@ from django.utils.timezone import now, localtime
 from django import template
 # from django.core.mail import EmailMultiAlternatives
 
-import uuid
 from datetime import timedelta
 import time
 
@@ -59,25 +58,21 @@ class BaseMail(object):
                 kwargs, to=mail_address,
             )))
 
-    def create_message(
-            self, to, encoding="utf-8"):
+    def create_message(self, recipient, **kwargs):
         '''
-        :param Recipient to:
+        :param Recipient recipient:
         '''
-        message_id = uuid.uuid1().hex
-        message = self.sender.create_message(
+        message = self.sender.instance.create_message(
             subject=self.subject,
-            body=self.rendered_message(to.address),
-            to=[to],            # list of tuple
-            headers={'Message-ID': message_id},
-            connection=self.instance.backend,
-        )
+            body=self.rendered_message(recipient.to),
+            to=[recipient.to.address],            # list of tuple
+            headers={'Message-ID': recipient.message_id}, **kwargs)
 
         if self.html:
             message.attach_alternative(
-                self.rendered_html(to), "text/html")
+                self.rendered_html(recipient.to), "text/html")
 
-        return message.message()
+        return message
 
 
 class MailStatus(object):
@@ -150,19 +145,16 @@ class Mail(object):
         self.status = self.STATUS_QUEUED
         self.sent_at = None
 
-    def send_mail(self, *args, **kwargs):
-        '''Send Mail'''
-        if self.sender.server and self.sender.server.handler:
-            self.sender.server.handler.send_mail(self, *args, **kwargs)
-
 
 class Recipient(object):
     '''Recipients for a Mail
     '''
 
-    def create_message(self, encoding="utf-8", connection=None, **kwargs):
-        return self.mail.create_message(
-            self.to, encoding=encoding, connection=connection, **kwargs)
+    def create_message(self, **kwargs):
+        return self.mail.create_message(self, **kwargs)
+
+    def send_mail(self):
+        return self.create_message().send()
 
 
 class Attachment(object):

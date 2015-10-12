@@ -4,7 +4,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-from flier.models import BaseModel, Sender, Address
+from flier.models import (
+    BaseModel, Sender, Recipient as BaseRecipient)
 from flier.mails import (
     methods, managers, fields,
 )
@@ -99,32 +100,12 @@ class Mail(BaseMail, MailStatus, methods.Mail):
         return self.subject
 
 
-class Recipient(BaseModel, methods.Recipient):
-    '''Recipients for a Mail
-    '''
-    mail = models.ForeignKey(
-        Mail, verbose_name=_('Mail'), help_text=_('Mail Help'))
-
-    to = models.ForeignKey(
-        Address, verbose_name=_('Recipient Address'),
-        help_text=_('Recipient Address Help'))
-
-    return_path = models.EmailField(
-        _('Return Path'), help_text=_('Return Path Help'), max_length=50,
-        null=True, default=None, blank=True)
-
-    sent_at = models.DateTimeField(
-        _('Sent At to Reipient'), help_text=_('Sent At to Recipient Help'),
-        null=True, blank=True, default=None)
+class Recipient(BaseRecipient, methods.Recipient):
+    mail = models.ForeignKey(Mail)
 
     class Meta:
-        verbose_name = _('Recipient')
-        verbose_name_plural = _('Recipient')
-
-    objects = managers.RecipientQuerySet.as_manager()
-
-    def __unicode__(self):
-        return self.to.__unicode__()
+        verbose_name = _('Mail Recipient')
+        verbose_name_plural = _('Mail Recipient')
 
 
 class Attachment(BaseModel, methods.Attachment):

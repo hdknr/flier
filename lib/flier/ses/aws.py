@@ -101,7 +101,6 @@ class SnsMessage(BaseMessage):
             cert, self.singin_input, self.Signature)
 
     def get_address_list(self):
-        print "@@@ SNS"
         return self.Message.get_address_list()
 
 
@@ -154,8 +153,6 @@ class SesMessage(BaseMessage):
         return getattr(self, '_complaint', _cache())
 
     def get_address_list(self):
-        print "@@@@@ SES notfification type:", self.notificationType
-
         if self.notificationType == 'Bounce':
             return self.bounce.get_address_list()
 
@@ -210,3 +207,36 @@ class ComplaintMessage(BaseMessage):
 
     def get_address_list(self):
         return [r.emailAddress for r in self.complainedRecipients]
+
+
+class SendEmailResponse(BaseMessage):
+
+    @property
+    def ResponseMetadata(self):
+        def _cache(self):
+            self._ResponseMetadata = BaseMessage(
+                self.data.get('ResponseMetadata'))
+            return self._ResponseMetadata
+
+        return getattr(self, '_ResponseMetadata', _cache(self))
+
+    @property
+    def SendEmailResult(self):
+        def _cache(self):
+            self._SendEmailResult = BaseMessage(
+                self.data.get('SendEmailResult'))
+            return self._SendEmailResult
+
+        return getattr(self, '_SendEmailResult', _cache(self))
+
+
+class SendRawEmailResponse(SendEmailResponse):
+
+    @property
+    def SendRawEmailResult(self):
+        def _cache(self):
+            self._SendRawEmailResult = BaseMessage(
+                self.data.get('SendRawEmailResult'))
+            return self._SendRawEmailResult
+
+        return getattr(self, '_SendRawEmailResult', _cache(self))

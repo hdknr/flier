@@ -49,5 +49,5 @@ class Address(object):
         self.save()
 
 
-class Log(object):
+class Recipient(object):
     pass
