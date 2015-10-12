@@ -7,3 +7,6 @@ from django.utils.translation import (
 class AppConfig(DjangoAppConfig):
     name = 'flier.ses'
     verbose_name = _("Flier SES")
+
+    def ready(self):
+        import tasks    # NOQA
