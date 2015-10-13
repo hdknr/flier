@@ -1,6 +1,7 @@
 from django.core.mail.backends import smtp
 from django.core.mail.message import sanitize_address
 from flier import models
+import smtplib
 
 
 class SmtpBackend(smtp.EmailBackend):
@@ -24,3 +25,15 @@ class SmtpBackend(smtp.EmailBackend):
                 sender=sender, to=_to,
                 message_id=email_message.extra_headers.get('Message-ID'),
                 key=email_message.from_email)       # VERP
+
+    def send_raw_message(self, from_email, to_email, message_string):
+        recipients = [to_email]
+        try:
+            self.open()
+            self.connection.sendmail(
+                from_email, recipients, message_string)
+        except smtplib.SMTPException:
+            if not self.fail_silently:
+                raise
+            return False
+        return True

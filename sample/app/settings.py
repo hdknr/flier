@@ -109,5 +109,10 @@ INSTALLED_APPS += (
     'flier.mails',
     'flier.smtp',
 )
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.mysql',
+    'HOST': 'localhost',
+    'NAME': 'flier', 'USER': 'flier', 'PASSWORD': 'flier',
+}
 import loggings
 LOGGING = loggings.LOGGING

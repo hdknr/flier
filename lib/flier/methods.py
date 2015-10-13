@@ -50,4 +50,9 @@ class Address(object):
 
 
 class Recipient(object):
-    pass
+
+    def bounce(self, status, message):
+        self.status = status
+        self.message = message
+        self.save()
+        self.to.bounce()

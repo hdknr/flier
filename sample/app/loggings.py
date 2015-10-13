@@ -1,3 +1,6 @@
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 _F = "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"
 
 LOGGING = {
@@ -10,7 +13,7 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'DEBUG', 'class': 'logging.FileHandler',
-            'filename': 'app.log',
+            'filename': os.path.join(BASE_DIR, 'app.log'),
             'formatter': 'verbose'
         },
     },
