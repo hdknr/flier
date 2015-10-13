@@ -69,11 +69,12 @@ class Source(object):
         return self.service.cert(url)
 
     def send_raw_message(self, addr_from, addr_to, raw_message):
-        self.connection.send_raw_email(
-            raw_message=raw_message,
-            source=addr_from,
-            destinations=addr_to,
-        )
+        if self.enabled:
+            self.connection.send_raw_email(
+                raw_message=raw_message,
+                source=addr_from,
+                destinations=addr_to,
+            )
 
     def verify_address(self, address):
         '''
@@ -83,11 +84,12 @@ class Source(object):
         self.connection.verify_email_address(address)
 
     def create_message(self, *args, **kwargs):
-        return EmailMultiAlternatives(
-            from_email=self.address,            # Only Verified Address
-            connection=self.backend,            # IMPORTANT
-            *args, **kwargs
-        )
+        if self.enabled:
+            return EmailMultiAlternatives(
+                from_email=self.address,            # Only Verified Address
+                connection=self.backend,            # IMPORTANT
+                *args, **kwargs
+            )
 
 
 class Notification(object):

@@ -40,6 +40,8 @@ class Sender(BaseModel, methods.Sender):
         help_text=_('Wait milliseconds help'),
         default=0)
 
+    enabled = models.BooleanField(_('Enabled Sender'), default=True)
+
     class Meta:
         verbose_name = _('Sender')
         verbose_name_plural = _('Sender')

@@ -54,6 +54,9 @@ class Sender(object):
         return self
 
     def create_message(self, *args, **kwargs):
+        if not self.enabled:
+            return None
+
         kwargs['from_email'] = self.verp()
         headers = kwargs.get('headers', {})
         headers['From'] = self.address
@@ -67,6 +70,10 @@ class Sender(object):
 class Forwarder(object):
     def forward_message(self, message):
         sender, _ = Address.objects.get_or_create(address=message.sender)
+        if not sender or not sender.enabled:
+            # TODO: logging
+            return
+
         message.relay, _ = self.relay_set.get_or_create(sender=sender)
         message.relay_from = self.domain.verp()
         message.save()
@@ -142,6 +149,7 @@ class MailMessage(object):
 
 class RelayedMessage(object):
     pass
+
 
 class Message(object):
     ''' Raw Message '''
