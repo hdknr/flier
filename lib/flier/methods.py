@@ -48,6 +48,7 @@ class Address(object):
     ''' Mail Address
     '''
     def bounce(self):
+        # TODO: send signal for app to disable this address
         self.bounced += 1
         self.save()
 
@@ -55,6 +56,7 @@ class Address(object):
 class Recipient(object):
 
     def bounce(self, status, message):
+        # TODO send signal to subclass instance
         self.status = status
         self.message = message
         self.save()

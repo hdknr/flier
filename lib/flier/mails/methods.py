@@ -136,10 +136,6 @@ class Mail(object):
     '''Mail Delivery Definition
     '''
 
-    @property
-    def address_model(self):
-        pass
-
     def reset_status(self):
         self.recipient_set.all().update(sent_at=None)
         self.status = self.STATUS_QUEUED

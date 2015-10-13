@@ -141,37 +141,7 @@ class MailMessage(object):
 
 
 class RelayedMessage(object):
-    @property
-    def relay_return_path(self):
-        '''Return-Path for Relay
-
-        - used for forwarding Message
-        '''
-        return self.relay and self.relay.relay_return_path(self) or ''
-
-    @property
-    def reverse_return_path(self):
-        '''Return-Path for Reverse for Relay
-
-        - used for forwarding error message for Relayed message
-        '''
-        return self.relay and self.relay.reverse_return_path(self) or ''
-
-    @property
-    def relay_to(self):
-        return self.relay and self.relay.postbox.forward.email
-
-    def reverse_to(self):
-        return self.relay and self.relay.sender.email
-
-    def relay_message(self):
-        if self.server and self.server.handler:
-            self.server.handler.relay_message(self)
-
-    def reverse_message(self):
-        if self.server and self.server.handler:
-            self.server.handler.reverse_message(self)
-
+    pass
 
 class Message(object):
     ''' Raw Message '''

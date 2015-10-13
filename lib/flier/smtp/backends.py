@@ -28,11 +28,10 @@ class SmtpBackend(smtp.EmailBackend):
                 key=email_message.from_email)       # VERP
 
     def send_raw_message(self, from_email, to_email, message_string):
-        recipients = [to_email]
         try:
             self.open()
             self.connection.sendmail(
-                from_email, recipients, force_bytes(message_string))
+                from_email, [to_email], force_bytes(message_string))
         except smtplib.SMTPException:
             if not self.fail_silently:
                 raise
