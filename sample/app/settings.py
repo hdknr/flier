@@ -109,6 +109,7 @@ INSTALLED_APPS += (
     'flier.mails',
     'flier.smtp',
     'docs',
+    'alumni',
 )
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.mysql',
