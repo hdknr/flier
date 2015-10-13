@@ -40,7 +40,7 @@ class Source(Sender, methods.Source):
         verbose_name_plural = _('SES Source')
 
     def __unicode__(self):
-        return self.address
+        return u"ses:{0}".format(self.address)
 
 
 class Topic(BaseModel):

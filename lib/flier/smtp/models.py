@@ -67,7 +67,7 @@ class Sender(BaseSender, methods.Sender):
         verbose_name_plural = _('Sender')
 
     def __unicode__(self):
-        return self.address
+        return u"smtp:{0}".format(self.address)
 
 
 class Forwarder(BaseModel, methods.Forwarder):

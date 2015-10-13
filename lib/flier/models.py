@@ -77,7 +77,7 @@ class Address(BaseModel, methods.Address):
         return self.address
 
     def save(self, *args, **kwargs):
-        if self.address and not self.domain:
+        if self.address:
             self.domain = self.address.split('@')[1]
         super(Address, self).save(*args, **kwargs)
 
