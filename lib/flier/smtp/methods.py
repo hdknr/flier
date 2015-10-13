@@ -218,10 +218,9 @@ class Message(object):
     def bounce_back(self, message):
         # Bounce
         self.relay.forwarder.forward.bounce()
-        self.bounce_back(message.raw_message)
 
         # Send back error
         bounce_from = self.relay.forwarder.domain.verp()
-        backends.SmtpBackend().send_raw_mesasge(
+        backends.SmtpBackend().send_raw_message(
             bounce_from,
             self.relay.sender.address, message.raw_message)

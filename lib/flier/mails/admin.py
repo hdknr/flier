@@ -26,7 +26,7 @@ class RecipientAdmin(admin.ModelAdmin):
 
     def send_message(self, request, queryset):
         for r in queryset:
-            pass
+            r.send_mail()
 
     send_message.short_description = _('Send Message')
 

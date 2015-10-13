@@ -129,6 +129,11 @@ class Relay(BaseModel, methods.Relay):
 
     objects = managers.RelayQuerySet.as_manager()
 
+    def __unicode__(self):
+        return u"{0} > {1}".format(
+            self.sender.__unicode__(),
+            self.forwarder.__unicode__(),)
+
 
 class MailMessage(models.Model, methods.MailMessage):
     raw_message = models.TextField(

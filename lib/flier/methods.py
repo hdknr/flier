@@ -31,7 +31,10 @@ class Sender(object):
     @property
     def instance(self):
         def _cache():
+            self._instance = None
             for i in self._meta.related_objects:
+                if not issubclass(i.related_model, self._meta.model):
+                    continue
                 self._instance = i.related_model.objects.filter(
                     **{i.field_name: self.id}).first()
                 if self._instance:

@@ -1,5 +1,6 @@
 from django.core.mail.backends import smtp
 from django.core.mail.message import sanitize_address
+from django.utils.encoding import force_bytes
 from flier import models
 import smtplib
 
@@ -31,7 +32,7 @@ class SmtpBackend(smtp.EmailBackend):
         try:
             self.open()
             self.connection.sendmail(
-                from_email, recipients, message_string)
+                from_email, recipients, force_bytes(message_string))
         except smtplib.SMTPException:
             if not self.fail_silently:
                 raise
