@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # flier documentation build configuration file, created by
-# sphinx-quickstart on Fri Oct  9 01:54:03 2015.
+# sphinx-quickstart on Tue Oct 13 02:34:06 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -56,8 +56,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'flier'
-copyright = u'2015, hdknr.com'
-author = u'hdknr.com'
+copyright = u'2015, HDKNR.COM'
+author = u'HDKNR.COM'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -83,7 +83,7 @@ language = 'ja'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = []
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -232,7 +232,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   (master_doc, 'flier.tex', u'flier Documentation',
-   u'hdknr.com', 'manual'),
+   u'HDKNR.COM', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -365,3 +365,39 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+######################################################################
+# exlucdes
+exclude_patterns = [
+    'models/*.models.*.rst',
+    '*/include.*.rst',
+]
+todo_include_todos = True
+
+# Django Project
+SRC_DIR = os.path.dirname(os.path.abspath(__file__))
+DOC_DIR = os.path.dirname(SRC_DIR)
+PRJ_DIR = os.path.join(os.path.dirname(DOC_DIR), 'sample')
+sys.path.insert(0, PRJ_DIR)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'app.settings'
+
+# ReadTheDocs Theme
+import sphinx_rtd_theme
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# http://docs.sphinx-users.jp/theming.html
+html_theme = 'bizstyle'
+
+
+# blockdiag
+extensions += ['sphinxcontrib.blockdiag']
+blockdiag_fontpath = '/usr/share/fonts/truetype/IPAfont00303/ipagp.ttf'
+
+
+def setup(app):
+    ''' SETUP '''
+    from django.core.wsgi import get_wsgi_application
+    get_wsgi_application()
+
+    from app.sphinx import process_docstring
+    # Register the docstring processor with sphinx
+    app.connect('autodoc-process-docstring', process_docstring)
