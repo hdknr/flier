@@ -11,6 +11,8 @@ Contents:
 .. toctree::
     :maxdepth: 2
 
+    todo
+
     models/flier
     models/ses
     models/smtp
