@@ -42,10 +42,10 @@ class Letter(mails_models.Mail):
                 key=self.reunion.sender.instance.verp(),
                 to=a.to, alumnus=a, sender=self.reunion.sender)
 
-    def included_alumni(self):
-        return self.reunion.alumnus_set.filter(letterrecipient__letter=self)
-
     def excluded_alumni(self):
+        '''
+        - included LetterRecipient list : self.letterrecipient_set.all()
+        '''
         return self.reunion.alumnus_set.exclude(letterrecipient__letter=self)
 
 
