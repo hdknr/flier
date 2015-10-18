@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from flier import models as flier_models
-from flier.mails import models as mails_models
+from flier.mails import (
+    models as mails_models, methods as mails_methods)
 
 # Create your models here.
 
@@ -49,6 +50,10 @@ class Letter(mails_models.Mail):
         return self.reunion.alumnus_set.exclude(letterrecipient__letter=self)
 
 
-class LetterRecipient(flier_models.Recipient):
-    letter = models.ForeignKey(Letter)
+class LetterRecipient(flier_models.Recipient, mails_methods.Recipient):
+    mail = models.ForeignKey(Letter)
     alumnus = models.ForeignKey(Alumnus)
+
+
+# class LetterTo(mails_models.Recipient):
+#     alumnus = models.ForeignKey(Alumnus)

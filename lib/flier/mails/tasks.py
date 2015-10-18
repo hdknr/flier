@@ -1,8 +1,10 @@
 from __future__ import absolute_import
 from django.utils.timezone import now, get_current_timezone
+from django.dispatch import receiver
 
 from flier.models import Sender
 from flier.mails import (models, utils)
+from flier.backends import BackendSignal
 
 from celery import shared_task
 # from celery.utils.log import get_task_logger
@@ -125,3 +127,15 @@ def send_mail(sender, mail):
     mail.status = mail.STATUS_SENT
     mail.sent_at = now()
     mail.save()
+
+
+@receiver(BackendSignal.sent_signal)
+def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
+            status='sent', message='', **kwargs):
+    print "on_sent", from_email, to, message, status, message
+
+
+@receiver(BackendSignal.failed_signal)
+def on_failed(sender=None, from_email=None, to=None, message_id=None, key=None,
+              status='sent', message='', **kwargs):
+    print "on_failed", from_email, to, message, status, message
