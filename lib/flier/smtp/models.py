@@ -29,6 +29,8 @@ class Domain(BaseModel, methods.Domain):
         verbose_name = _('Domain')
         verbose_name_plural = _('Domain')
 
+    objects = managers.DomainQuerySet.as_manager()
+
     def __unicode__(self):
         return self.domain
 
@@ -100,6 +102,8 @@ class Forwarder(BaseModel, methods.Forwarder):
     class Meta:
         verbose_name = _('Forwarder')
         verbose_name_plural = _('Forwarder')
+
+    objects = managers.ForwarderQuerySet.as_manager()
 
     def __unicode__(self):
         to = self.forward and self.forward.address or ''
