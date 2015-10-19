@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from django.utils.timezone import now, get_current_timezone
 from django.dispatch import receiver
 
-from flier.models import Sender
+from flier.models import Sender, Recipient
 from flier.mails import (models, utils)
 from flier.backends import BackendSignal
 
@@ -132,10 +132,19 @@ def send_mail(sender, mail):
 @receiver(BackendSignal.sent_signal)
 def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
             status='sent', message='', **kwargs):
-    print "on_sent", from_email, to, message, status, message
+
+    Recipient.objects.filter(message_id=message_id).update(
+        key=key,
+        sent_at=now(),
+        status=status,
+        message=message)
 
 
 @receiver(BackendSignal.failed_signal)
 def on_failed(sender=None, from_email=None, to=None, message_id=None, key=None,
               status='sent', message='', **kwargs):
-    print "on_failed", from_email, to, message, status, message
+    Recipient.objects.filter(message_id=message_id).update(
+        key=key,
+        sent_at=now(),
+        status=status,
+        message=message)
