@@ -100,6 +100,11 @@ class Mail(BaseMail, MailStatus, methods.Mail):
         return self.subject
 
 
+class AbstractRecipient(BaseRecipient, methods.Recipient):
+    class Meta:
+        abstract = True
+
+
 class Recipient(BaseRecipient, methods.Recipient):
     mail = models.ForeignKey(Mail)
 

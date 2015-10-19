@@ -55,5 +55,10 @@ class LetterRecipient(flier_models.Recipient, mails_methods.Recipient):
     alumnus = models.ForeignKey(Alumnus)
 
 
-# class LetterTo(mails_models.Recipient):
-#     alumnus = models.ForeignKey(Alumnus)
+class AdminLetter(mails_models.Mail):
+    reunion = models.ForeignKey(Reunion)
+
+
+class AdminLetterRecipient(flier_models.Recipient, mails_methods.Recipient):
+    mail = models.ForeignKey(AdminLetter)
+    alumnus = models.ForeignKey(Alumnus)
