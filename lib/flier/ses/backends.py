@@ -44,12 +44,12 @@ class SesBackend(base.BaseEmailBackend, BackendSignal):
             res = SendRawEmailResponse(res['SendRawEmailResponse'])
 
             self.sent_signal.send(
-                sender=self,
+                sender=self.__class__,
                 from_email=sender, to=destinations, message_id=message_id,
                 key=res.SendRawEmailResult.MessageId,
                 status='SendRawEmailResponse', message=res.format())
         except Exception, ex:
             self.failed_signal.send(
-                sender=self,
+                sender=self.__class__,
                 from_email=sender, to=destinations, message_id=message_id,
                 status=ex.__class__.__name__, message=ex.message)

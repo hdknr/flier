@@ -21,7 +21,7 @@ class SmtpBackend(smtp.EmailBackend, BackendSignal):
 
         for to in recipients:
             self.sent_signal.send(
-                sender=self,
+                sender=self.__class__,
                 from_email=from_email, to=to,
                 message_id=email_message.extra_headers.get('Message-ID'),
                 status='smtp send',
