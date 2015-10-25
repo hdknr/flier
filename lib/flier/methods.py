@@ -1,4 +1,4 @@
-from django.core import serializers
+from django.core import serializers, mail
 from django.contrib.contenttypes.models import ContentType
 
 import time
@@ -29,6 +29,13 @@ class Sender(object):
                 time.sleep(self.wait_ms / 1000.0)
 
     @property
+    def domain(self):
+        return self.address.split('@')[1]
+
+    def create_messageid(self):
+        return mail.make_msgid(domain=self.domain)
+
+    @property
     def instance(self):
         def _cache():
             self._instance = None
@@ -43,6 +50,16 @@ class Sender(object):
 
         return getattr(self, '_instance', _cache())
 
+    def create_recipient(self, address, message_id=None):
+        to_filed = self.recipient_set.model._meta.get_field_by_name('to')[0]
+        message_id = message_id or self.create_messageid()
+        recipient, _ = self.recipient_set.get_or_create(
+            key=message_id,             # This key replaced by Sender
+            message_id=message_id,
+            to=to_filed.related_model.objects.get_or_create(address=address)[0],
+        )
+        return recipient
+
 
 class Address(object):
     ''' Mail Address
@@ -54,6 +71,12 @@ class Address(object):
 
 
 class Recipient(object):
+
+    def create_message(self, headers={}, *args, **kwargs):
+        headers['Message-ID'] = self.message_id
+        return self.sender.instance.create_message(
+            to=[self.to.address],
+            headers=headers, *args, **kwargs)
 
     def bounce(self, status, message):
         # TODO send signal to subclass instance

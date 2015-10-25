@@ -3,7 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.dispatch import dispatcher
 
 from flier import (methods, managers)
-import uuid
 
 
 class BaseModel(models.Model, methods.BaseModel):
@@ -117,9 +116,11 @@ class Recipient(BaseModel, methods.Recipient):
     objects = managers.RecipientQuerySet.as_manager()
 
     def __unicode__(self):
-        return self.to.__unicode__()
+        return self.to_id and self.to.__unicode__() or ''
 
     def save(self, *args, **kwargs):
         if not self.message_id:
-            self.message_id = uuid.uuid1().hex       # TODO: better id rules
+            self.message_id = self.sender.create_messageid()
+        if not self.key:
+            self.key = self.message_id
         super(Recipient, self).save(*args, **kwargs)
