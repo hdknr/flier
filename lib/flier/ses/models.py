@@ -7,13 +7,23 @@ import methods
 
 
 class Service(BaseModel, methods.Service):
-    name = models.CharField(_('Service Name'), max_length=100)
+    name = models.CharField(
+        _('Service Name'),
+        help_text=_('Service Name Help'),
+        max_length=100)
+
+    region = models.CharField(
+        _('SES Region'), help_text=_('SES Region Help'),
+        max_length=30, null=True, default=None, blank=True)
 
     key = models.CharField(
         _('SES Access Key'),
+        help_text=_('SES Access Key Help'),
         max_length=100, null=True, default=None, blank=True)
+
     secret = models.CharField(
         _('SES Access Secret'),
+        help_text=_('SES Access Secret Help'),
         max_length=100, null=True, default=None, blank=True)
 
     settings = models.TextField(
@@ -29,10 +39,11 @@ class Service(BaseModel, methods.Service):
 
 class Source(Sender, methods.Source):
     service = models.ForeignKey(
-        Service, null=True, blank=True, default=None, )
+        Service, verbose_name=_('Service'), help_text=_('Service Help'),
+        null=True, blank=True, default=None, )
 
     arn = models.CharField(
-        _('Source Identity Arn'), help_text=_('Source Identity Arn'),
+        _('Source Identity Arn'), help_text=_('Source Identity Arn Help'),
         max_length=100, null=True, default=None, blank=True)
 
     class Meta:
@@ -48,6 +59,8 @@ class Topic(BaseModel):
     COMPLAINT = 1
     DELIVERY = 2
 
+    NOTIFICATION_TYPES = ['Bounce', 'Complaint', 'Delivery']
+
     source = models.ForeignKey(
         Source, null=True, blank=True, default=None, )
 
@@ -59,6 +72,7 @@ class Topic(BaseModel):
 
     arn = models.CharField(
         _('Topic Arn'),
+        help_text=_('Topic Arn Help'),
         max_length=100, null=True, default=None, blank=True)
 
     class Meta:

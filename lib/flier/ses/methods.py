@@ -1,9 +1,14 @@
+'''
+AWS SES
+
+- http://boto.readthedocs.org/en/latest/ref/ses.html
+'''
 from django.core.mail.message import EmailMultiAlternatives
 import json
 from datetime import datetime
 from enum import Enum
 
-import boto
+import boto.ses
 import requests
 import aws
 import backends
@@ -42,14 +47,40 @@ class Service(object):
         return cert
 
     @property
+    def regions(self):
+        def _cache():
+            self._regions = boto.ses.regions()
+            return self._regions
+
+        return getattr(self, '_regions', _cache())
+
+    @property
+    def region_info(self):
+        def _cache():
+            self._region_info = None
+            for ri in self.regions:
+                if ri.name == self.region:
+                    self._region_info = ri
+                    break
+
+            return self._region_info
+
+        return getattr(self, '_region_info', _cache())
+
+    @property
     def connection(self):
         def _cache():
             self._conn = boto.connect_ses(
                 aws_access_key_id=self.key,
-                aws_secret_access_key=self.secret)
+                aws_secret_access_key=self.secret,
+                region=self.region_info)
             return self._conn
 
         return getattr(self, '_conn', _cache())
+
+    def verify_email_address(self, email):
+        res = self.connection.verify_email_address(email)
+        return res
 
 
 class Source(object):
@@ -82,6 +113,19 @@ class Source(object):
         #verifying-a-sender-email-address
         '''
         self.connection.verify_email_address(address)
+
+    def set_notification(self):
+        '''
+        http://boto.readthedocs.org/en/latest/ref/ses.html?
+        highlight=ses
+        #boto.ses.connection.SESConnection.set_identity_notification_topic
+        '''
+        for topic in self.topic_set.all():
+            self.connection.set_identity_notification_topic(
+                self.address,
+                topic.NOTIFICATION_TYPES[topic.topic],
+                topic.arn)
+            # TOOD: ERROR HANDLING
 
     def create_message(self, *args, **kwargs):
         if self.enabled:
