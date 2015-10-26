@@ -60,13 +60,11 @@ class BaseMail(object):
 
     def create_message(self, recipient, **kwargs):
         '''
-        :param Recipient recipient:
+        :param flier.moddels.Recipient recipient:
         '''
-        message = self.sender.instance.create_message(
+        message = recipient.create_message(
             subject=self.subject,
-            body=self.rendered_message(recipient.to),
-            to=[recipient.to.address],            # list of tuple
-            headers={'Message-ID': recipient.message_id}, **kwargs)
+            body=self.rendered_message(recipient.to),)
 
         if self.html:
             message.attach_alternative(
@@ -145,12 +143,7 @@ class Mail(object):
 class Recipient(object):
     '''Recipients for a Mail
     '''
-
-    def create_message(self, **kwargs):
-        return self.mail.create_message(self, **kwargs)
-
-    def send_mail(self):
-        return self.create_message().send()
+    pass
 
 
 class Attachment(object):

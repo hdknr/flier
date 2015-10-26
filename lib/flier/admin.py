@@ -61,19 +61,28 @@ class SenderAdmin(admin.ModelAdmin):
 
 class RecipientAdmin(admin.ModelAdmin):
     list_filter = ('sender', 'status', )
-    list_excludes = ('created_at', )
+    list_excludes = ('created_at', 'message', )
     date_hierarchy = 'sent_at'
     raw_id_fields = ('sender', 'to', )
+    readonly_fields = ('message_view', )
 
     def get_fieldsets(self, request, obj=None):
         res = super(RecipientAdmin, self).get_fieldsets(request, obj=obj)
         if obj is None:
             ex = ['key', 'message_id', 'sent_at', 'status', 'message']
-            res = [
-                (r[0], {'fields': [i for i in r[1]['fields'] if i not in ex]})
-                for r in res
-            ]
+        else:
+            ex = ['message', ]
+        res = [
+            (r[0], {'fields': [i for i in r[1]['fields'] if i not in ex]})
+            for r in res
+        ]
         return res
+
+    def message_view(self, obj):
+        return _T('''<hr><pre>{{ m }}</pre>''', m=obj.message)
+
+    message_view.short_description = _("Message to Recipient")
+    message_view.allow_tags = True
 
 
 def register(app_fullname, admins, ignore_models=[]):

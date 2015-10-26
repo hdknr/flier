@@ -120,7 +120,8 @@ class Recipient(BaseModel, methods.Recipient):
 
     def save(self, *args, **kwargs):
         if not self.message_id:
-            self.message_id = self.sender.create_messageid()
+            self.message_id = self.sender.create_messageid(
+                idstring=self.to_id and str(self.to_id))
         if not self.key:
             self.key = self.message_id
         super(Recipient, self).save(*args, **kwargs)

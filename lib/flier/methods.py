@@ -2,6 +2,7 @@ from django.core import serializers, mail
 from django.contrib.contenttypes.models import ContentType
 
 import time
+import utils
 
 
 class BaseModel(object):
@@ -32,8 +33,9 @@ class Sender(object):
     def domain(self):
         return self.address.split('@')[1]
 
-    def create_messageid(self):
-        return mail.make_msgid(domain=self.domain)
+    def create_messageid(self, idstring=None):
+        idstring = idstring or utils.get_random_string(8)
+        return mail.make_msgid(idstring=idstring, domain=self.domain)
 
     @property
     def instance(self):
@@ -51,12 +53,13 @@ class Sender(object):
         return getattr(self, '_instance', _cache())
 
     def create_recipient(self, address, message_id=None):
-        to_filed = self.recipient_set.model._meta.get_field_by_name('to')[0]
-        message_id = message_id or self.create_messageid()
+        to_filed, _ = self.recipient_set.model._meta.get_field_by_name('to')
+        to, _ = to_filed.related_model.objects.get_or_create(address=address)
+        message_id = message_id or self.create_messageid(idstring=to.id)
         recipient, _ = self.recipient_set.get_or_create(
             key=message_id,             # This key replaced by Sender
             message_id=message_id,
-            to=to_filed.related_model.objects.get_or_create(address=address)[0],
+            to=to,
         )
         return recipient
 
