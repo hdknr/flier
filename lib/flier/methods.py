@@ -72,7 +72,15 @@ class Address(object):
 
 class Recipient(object):
 
-    def create_message(self, headers={}, *args, **kwargs):
+    def create_message(
+            self,
+            subject='', body='',
+            bcc=None, attachments=None, headers={},
+            cc=None, reply_to=None, *args, **kwargs):
+
+        '''Create  :ref:`django.core.mail.message.EmailMessage` derived
+        class instance
+        '''
         headers['Message-ID'] = self.message_id
         return self.sender.instance.create_message(
             to=[self.to.address],
