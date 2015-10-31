@@ -93,3 +93,16 @@ class Command(Command):
             from flier.smtp.models import Message
             for m in Message.objects.filter(id__in=params.id):
                 m.process_message()
+
+    class ProcessDropMessage(SubCommand):
+
+        name = "process_drop_message"
+        description = _("Process a Dropped Message")
+        args = [
+            (('path',), dict(nargs='*', help="Mail Message File")),
+        ]
+
+        def run(self, params, **options):
+            from flier.smtp.tasks import process_drop_mail
+            for path in params.path:
+                print process_drop_mail(path)

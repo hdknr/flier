@@ -65,6 +65,7 @@ class RecipientAdmin(admin.ModelAdmin):
     date_hierarchy = 'sent_at'
     raw_id_fields = ('sender', 'to', )
     readonly_fields = ('message_view', )
+    search_fields = ('to__address', 'key', 'sender__address', )
 
     def get_fieldsets(self, request, obj=None):
         res = super(RecipientAdmin, self).get_fieldsets(request, obj=obj)

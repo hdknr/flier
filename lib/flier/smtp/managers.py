@@ -1,6 +1,8 @@
 ''' Email Delivery Subsystem
 '''
 from django.db import models
+from email.utils import parseaddr
+from email import message_from_file
 
 
 class DomainQuerySet(models.QuerySet):
@@ -33,4 +35,18 @@ class RelayQuerySet(models.QuerySet):
 
 
 class MessageQuerySet(models.QuerySet):
-    pass
+    def from_file(self, path):
+        return self.from_mailobject(message_from_file(open(path)))
+
+    def from_mailobject(self, obj):
+        '''
+            :param email.message.Message obj:
+        '''
+
+        _, from_address = parseaddr(obj['Return-Path'])
+        _, to_address = parseaddr(obj['Delivered-To'])
+        doms = self.model._meta.get_field_by_name('domain')[0].related_model
+        domain = doms.objects.filter(domain=to_address.split('@')[1]).first()
+        return self.create(
+            domain=domain, sender=from_address, recipient=to_address,
+            original_recipient=to_address, raw_message=obj.as_string())
