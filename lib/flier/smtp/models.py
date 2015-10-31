@@ -80,7 +80,7 @@ class Forwarder(BaseModel, methods.Forwarder):
 
     address = models.EmailField(
         _('Forwarder Address'), help_text=_('Forwarder Address Help'),
-        max_length=50)
+        max_length=50, unique=True, db_index=True)
 
     forward = models.ForeignKey(
         Address, verbose_name=_('Forward Address'),

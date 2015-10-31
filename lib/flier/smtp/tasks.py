@@ -8,6 +8,7 @@ from email import message_from_file
 import traceback
 import glob
 import os
+import time
 
 from flier.models import Recipient
 import models
@@ -61,24 +62,31 @@ def process_drop(*args, **kwargs):
         res = process_drop_mail(m)
         if res > 0:
             os.remove(m)
+        time.sleep(0.1)
 
 
 @shared_task
 def process_drop_mail(path, *args, **kwargs):
+    if not os.path.isfile(path):
+        return -1
+
     msg = message_from_file(open(path))
     to = msg['Delivered-To']
 
+    # Bounced Back
     recipient = Recipient.objects.filter(key=to).first()
     if recipient:
         recipient.bounce(
             status='smtp bounce', message=msg.as_string())
         return 1
 
+    # Forwarding
     forwarder = models.Forwarder.objects.filter(address=to).first()
     if forwarder:
         forwarder.forward(models.Message.objects.from_mailobject(msg))
         return 2
 
+    # Forwarding Bounced
     original = models.Message.objects.filter(relay_from=to).first()
     if original:
         original.bounce_back(
