@@ -26,12 +26,14 @@ class MailQuerySet(models.QuerySet):
             enabled=True,
         )
 
+
 class RecipientQuerySet(models.QuerySet):
-    def active_set(self, basetime=None):
-        basetime = basetime or now()
-        return self.filter(
-            models.Q(mail__due_at__isnull=True) |
-            models.Q(mail__due_at__lte=basetime),
-            # mail__enabled=True,
-            sent_at__isnull=True,
-        )
+    pass
+#     def active_set(self, basetime=None):
+#         basetime = basetime or now()
+#         return self.filter(
+#             models.Q(mail__due_at__isnull=True) |
+#             models.Q(mail__due_at__lte=basetime),
+#             # mail__enabled=True,
+#             sent_at__isnull=True,
+#         )

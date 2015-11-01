@@ -17,7 +17,25 @@ class BaseModel(object):
             "json", [self], ensure_ascii=False, indent=4)
 
 
-class Sender(object):
+class BaseMethod(object):
+
+    @property
+    def instance(self):
+        def _cache():
+            self._instance = None
+            for i in self._meta.related_objects:
+                if not issubclass(i.related_model, self._meta.model):
+                    continue
+                self._instance = i.related_model.objects.filter(
+                    **{i.field_name: self.id}).first()
+                if self._instance:
+                    break
+            return self._instance
+
+        return getattr(self, '_instance', _cache())
+
+
+class Sender(BaseMethod):
     def __init__(self, *args, **kwargs):
         super(Sender, self).__init__(*args, **kwargs)
         self._every = 0
@@ -36,21 +54,6 @@ class Sender(object):
     def create_messageid(self, idstring=None):
         idstring = idstring or utils.get_random_string(8)
         return mail.make_msgid(idstring=idstring, domain=self.domain)
-
-    @property
-    def instance(self):
-        def _cache():
-            self._instance = None
-            for i in self._meta.related_objects:
-                if not issubclass(i.related_model, self._meta.model):
-                    continue
-                self._instance = i.related_model.objects.filter(
-                    **{i.field_name: self.id}).first()
-                if self._instance:
-                    break
-            return self._instance
-
-        return getattr(self, '_instance', _cache())
 
     def create_recipient(self, address, message_id=None):
         to_filed, _ = self.recipient_set.model._meta.get_field_by_name('to')

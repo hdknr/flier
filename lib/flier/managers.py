@@ -27,3 +27,7 @@ class RecipientQuerySet(models.QuerySet):
         recipient.save()
 
         return recipient
+
+    def active_set(self):
+        return self.filter(
+            sent_at__isnull=True, to__enabled=True)

@@ -2,6 +2,7 @@ from django.utils.timezone import now, localtime
 # from django.utils.encoding import force_text
 from django import template
 # from django.core.mail import EmailMultiAlternatives
+from flier.methods import BaseMethod
 
 from datetime import timedelta
 import time
@@ -39,7 +40,7 @@ class MailTemplate(object):
         )
 
 
-class BaseMail(object):
+class BaseMail(BaseMethod):
 
     @property
     def subtype(self):
@@ -71,6 +72,9 @@ class BaseMail(object):
                 self.rendered_html(recipient.to), "text/html")
 
         return message
+
+    def recipients(self, basetime=None):
+        return self.recipient_set.active_set()
 
 
 class MailStatus(object):
