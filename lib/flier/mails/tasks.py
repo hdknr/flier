@@ -50,6 +50,15 @@ def get_return_path_and_to(sender, mail, recipient):
 
 
 @shared_task
+def enqueue_mails():
+    '''Enqueue mails '''
+    for mail in models.Mail.objects.queueing_set():
+        mail.enqueue()
+        logger.info(u'{0} has been canceled task_id={1}'.format(
+            mail.id, mail.task_id))
+
+
+@shared_task
 def send_mail(mail, withbreak=True):
     '''Send mail
 

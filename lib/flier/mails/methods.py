@@ -159,7 +159,7 @@ class Mail(object):
         self.cancel(save=False)
         self.instance.all_recipients().update(
             sent_at=None, status='waiting', message='', )
-        self.status = self.STATUS_QUEUED
+        self.status = self.STATUS_DISABLED
         self.sent_at = None
         self.save()
 

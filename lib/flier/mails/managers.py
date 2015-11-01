@@ -19,21 +19,14 @@ class MailTemplateQuerySet(models.QuerySet):
 
 
 class MailQuerySet(models.QuerySet):
-    def active_set(self, basetime=None):
+    def queueing_set(self, basetime=None):
         basetime = basetime or now()
         return self.filter(
             models.Q(due_at__isnull=True) | models.Q(due_at__lte=basetime),
-            enabled=True,
-        )
+            status=self.model.STATUS_QUEUED,
+            sent_at__isnull=True,
+        ).exclude(task_id__regex=r'.+')
 
 
 class RecipientQuerySet(models.QuerySet):
     pass
-#     def active_set(self, basetime=None):
-#         basetime = basetime or now()
-#         return self.filter(
-#             models.Q(mail__due_at__isnull=True) |
-#             models.Q(mail__due_at__lte=basetime),
-#             # mail__enabled=True,
-#             sent_at__isnull=True,
-#         )
