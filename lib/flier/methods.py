@@ -22,7 +22,7 @@ class BaseMethod(object):
     @property
     def instance(self):
         def _cache():
-            self._instance = None
+            self._instance = self
             for i in self._meta.related_objects:
                 if not issubclass(i.related_model, self._meta.model):
                     continue

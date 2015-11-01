@@ -1,7 +1,5 @@
 from django.utils.timezone import now, localtime
-# from django.utils.encoding import force_text
 from django import template
-# from django.core.mail import EmailMultiAlternatives
 from flier.methods import BaseMethod
 
 from datetime import timedelta
@@ -73,8 +71,19 @@ class BaseMail(BaseMethod):
 
         return message
 
-    def recipients(self, basetime=None):
+    def activie_recipients(self, basetime=None):
         return self.recipient_set.active_set()
+
+    def all_recipients(self):
+        return self.recipient_set.all()
+
+    def enqueue(self):
+        '''Enqueue a Mail to job queue. '''
+        from flier.mails import tasks
+        r = tasks.send_mail.apply_async(
+            [self.id], eta=tasks.make_eta(self.due_at or now()))
+        self.task_id = r.id
+        self.save()
 
 
 class MailStatus(object):
@@ -139,9 +148,11 @@ class Mail(object):
     '''
 
     def reset_status(self):
-        self.recipient_set.all().update(sent_at=None)
+        self.instance.all_recipients().update(
+            sent_at=None, status='waiting', message='', )
         self.status = self.STATUS_QUEUED
         self.sent_at = None
+        self.save()
 
 
 class Recipient(object):

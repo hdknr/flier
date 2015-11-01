@@ -29,7 +29,7 @@ def make_eta(when=None):
 def get_object(instance, model_class):
     mail = isinstance(instance, model_class) and \
         model_class.objects.get(id=instance.id) or \
-        model_class.get(id=instance)
+        model_class.objects.get(id=instance)
     return mail.instance
 
 
@@ -71,7 +71,7 @@ def send_mail(mail, withbreak=True):
         mail.save()         # post_save signle fires again
 
     sender = mail.sender.instance            # Actual Sender
-    for recipient in mail.recipients():
+    for recipient in mail.active_recipients():
         # INTERUPTED:
         if withbreak and mail.delay():    # make this Mail pending state
             logger.info("Mail({0}) is delayed".format(mail.id))

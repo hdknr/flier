@@ -75,6 +75,10 @@ class MailStatus(models.Model, methods.MailStatus):
         _('Sleep To'), help_text=_('Sleep To Help'),
         null=True, blank=True, default=None)
 
+    task_id = models.CharField(
+        _('Task ID'), help_text=_('Task ID Help'),  max_length=40,
+        null=True, blank=True, default=None)
+
     class Meta:
         abstract = True
 
