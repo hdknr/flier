@@ -142,16 +142,21 @@ class MailStatus(object):
             self.due_at is None or self.due_at <= dt,
             self.sent_at is None])
 
+    def cancel(self, save=True):
+        if self.task_id:
+            revoke(self.task_id, terminate=True)
+            self.mailcancel_set.get_or_create(task_id=self.task_id)
+            self.task_id = ''
+            if save:
+                self.save()
+
 
 class Mail(object):
     '''Mail Delivery Definition
     '''
 
     def reset_status(self):
-        if self.task_id:
-            revoke(self.task_id, terminate=True)
-            self.task_id = ''
-
+        self.cancel(save=False)
         self.instance.all_recipients().update(
             sent_at=None, status='waiting', message='', )
         self.status = self.STATUS_QUEUED

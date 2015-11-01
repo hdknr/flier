@@ -104,6 +104,17 @@ class Mail(BaseMail, MailStatus, methods.Mail):
         return self.subject
 
 
+class MailCancel(BaseModel):
+    mail = models.ForeignKey(Mail)
+    task_id = models.CharField(
+        _('Task ID'), help_text=_('Task ID Help'),  max_length=40,
+        db_index=True, unique=True,)
+
+    class Meta:
+        verbose_name = _('Mail Cancel')
+        verbose_name_plural = _('Mail Cancel')
+
+
 class AbstractRecipient(BaseRecipient, methods.Recipient):
     class Meta:
         abstract = True

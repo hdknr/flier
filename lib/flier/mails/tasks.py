@@ -57,6 +57,16 @@ def send_mail(mail, withbreak=True):
     '''
     mail = get_object(mail, models.Mail)
 
+    if hasattr(send_mail, 'request'):
+        cancel = mail.instance.mailcancel_set.filter(
+            task_id=send_mail.request.id).first()
+        if cancel:
+            cancel.delete()
+            mail.task_id = ''
+            mail.save()
+            logger.warn(u'{0} has been canceled'.format(send_mail.request.id))
+            return
+
     if mail.sent_at or mail.status == mail.STATUS_DISABLED:
         # Already completed
         logger.warn(u"{0} {1} {2} {3}".format(
