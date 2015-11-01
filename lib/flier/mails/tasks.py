@@ -96,6 +96,7 @@ def send_mail(mail, withbreak=True):
         sender.wait()
 
     # END: completed sending
+    mail.task_id = ''
     mail.status = mail.STATUS_SENT
     mail.sent_at = now()
     mail.save()

@@ -1,9 +1,9 @@
 from django.utils.timezone import now, localtime
 from django import template
-from flier.methods import BaseMethod
-
+from celery.task.control import revoke
 from datetime import timedelta
 import time
+from flier.methods import BaseMethod
 
 
 class Service(object):
@@ -148,6 +148,10 @@ class Mail(object):
     '''
 
     def reset_status(self):
+        if self.task_id:
+            revoke(self.task_id, terminate=True)
+            self.task_id = ''
+
         self.instance.all_recipients().update(
             sent_at=None, status='waiting', message='', )
         self.status = self.STATUS_QUEUED
