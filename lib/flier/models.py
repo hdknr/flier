@@ -26,6 +26,9 @@ class BaseMessage(models.Model):
 
 
 class Sender(BaseModel, methods.Sender):
+    name = models.CharField(
+        _('Sender Name'), help_text=_('Sender Name Help'),
+        max_length=30)
     address = models.EmailField(
         _('Sender Address'), max_length=100)
 

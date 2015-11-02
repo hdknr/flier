@@ -58,9 +58,6 @@ class Sender(object):
             return None
 
         kwargs['from_email'] = self.verp()
-        headers = kwargs.get('headers', {})
-        headers['From'] = self.address
-        kwargs['headers'] = headers
         EmailMultiAlternatives.encoding = kwargs.get('encoding',  None)
         return EmailMultiAlternatives(
             connection=self.backend,

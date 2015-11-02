@@ -1,7 +1,10 @@
 from django.core import serializers, mail
 from django.contrib.contenttypes.models import ContentType
 
+from email.header import Header
+from email.utils import formataddr
 import time
+
 import utils
 
 
@@ -66,6 +69,10 @@ class Sender(BaseMethod):
         )
         return recipient
 
+    def to_addr(self):
+        h = Header(self.name, 'utf8')
+        return formataddr((str(h), self.address))
+
 
 class Address(object):
     ''' Mail Address
@@ -88,9 +95,12 @@ class Recipient(object):
         class instance
         '''
         headers['Message-ID'] = self.message_id
+        headers['From'] = self.sender.to_addr()
         return self.sender.instance.create_message(
             to=[self.to.address],
-            headers=headers, *args, **kwargs)
+            subject=subject, body=body,
+            bcc=bcc, attachments=attachments, headers=headers,
+            cc=cc, reply_to=reply_to, *args, **kwargs)
 
     def bounce(self, status, message):
         # TODO send signal to subclass instance
