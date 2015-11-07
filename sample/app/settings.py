@@ -101,15 +101,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 ###
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
 TIME_ZONE = 'Asia/Tokyo'
 LANGUAGE_CODE = 'ja'
 INSTALLED_APPS += (
     'flier',
-#    'flier.ses',
-#    'flier.mails',
-#    'flier.smtp',
+    'flier.ses',
+    'flier.mails',
+    'flier.smtp',
     'docs',
-#    'alumni',
+    'alumni',
 )
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.mysql',
