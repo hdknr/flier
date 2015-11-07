@@ -1,24 +1,32 @@
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-_F = "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"
-
+_F = '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'root': {
+        'level': 'WARNING', 'handlers': ['sentry'],
+    },
     'formatters': {
-        'verbose': {'format': _F, 'datefmt': "%d/%b/%Y %H:%M:%S"},
-        'simple': {'format': '%(levelname)s %(message)s'},
+        'verbose': {'format': _F, },
     },
     'handlers': {
-        'file': {
-            'level': 'DEBUG', 'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'app.log'),
-            'formatter': 'verbose'
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
         },
+        'console': {
+            'level': 'DEBUG', 'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
     },
     'loggers': {
-        'django': {'handlers': ['file'], 'propagate': True, 'level': 'DEBUG'},
-        'flier': {'handlers': ['file'], 'level': 'DEBUG', },
-    }
+        'django.db.backends': {
+            'level': 'ERROR', 'handlers': ['console'], 'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG', 'handlers': ['console'], 'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG', 'handlers': ['console'], 'propagate': False,
+        },
+    },
 }

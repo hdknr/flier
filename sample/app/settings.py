@@ -105,12 +105,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
 TIME_ZONE = 'Asia/Tokyo'
 LANGUAGE_CODE = 'ja'
 INSTALLED_APPS += (
-    'flier',
-    'flier.ses',
-    'flier.mails',
-    'flier.smtp',
+    'flier', 'flier.ses', 'flier.mails', 'flier.smtp',
+    'app', 'alumni',
     'docs',
-    'alumni',
 )
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.mysql',
@@ -122,3 +119,20 @@ LOGGING = loggings.LOGGING
 
 # STMP dropped mails
 FLIER_SMTP_DROP = os.path.join(BASE_DIR, 'drops/mails')
+
+# Celery
+try:
+    from app.celery import *    # noqa
+except:
+    CELERY_ALWAYS_EAGER = True
+
+# local_settings
+try:
+    from local_settings import *    # noqa
+    # local_settings.RAVEN_CONFIG is required
+    INSTALLED_APPS += (
+        'raven.contrib.django.raven_compat',
+    )
+except:
+    print "eeerr"
+    pass

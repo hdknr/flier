@@ -4,6 +4,7 @@
 *.pyc
 *.egg-info
 *.log
+local_settings.py
 migrations
 assets
 docs/build
