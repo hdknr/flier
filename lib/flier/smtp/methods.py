@@ -6,6 +6,10 @@ import backends
 import uuid
 from flier.models import Recipient, Address
 
+import logging
+
+logger = logging.getLogger('flier')
+
 
 class Domain(object):
     '''Domain:
@@ -68,7 +72,8 @@ class Forwarder(object):
     def forward_message(self, message):
         sender, _ = Address.objects.get_or_create(address=message.sender)
         if not sender or not sender.enabled:
-            # TODO: logging
+            logger.warn(u'{0} is disabled for sending mails'.format(
+                unicode(sender)))
             return
 
         message.relay, _ = self.relay_set.get_or_create(sender=sender)
