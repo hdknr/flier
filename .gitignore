@@ -10,4 +10,5 @@ docs/build
 sample/static/
 sample/docs/build
 sample/logs/
+sample/drops/mails
 sample/upload/
