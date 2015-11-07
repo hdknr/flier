@@ -119,3 +119,6 @@ DATABASES['default'] = {
 }
 import loggings
 LOGGING = loggings.LOGGING
+
+# STMP dropped mails
+FLIER_SMTP_DROP = os.path.join(BASE_DIR, 'drops/mails')

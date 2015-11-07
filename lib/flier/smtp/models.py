@@ -139,7 +139,7 @@ class Relay(BaseModel, methods.Relay):
             self.forwarder.__unicode__(),)
 
 
-class MailMessage(models.Model, methods.MailMessage):
+class MailMessage(BaseModel, methods.MailMessage):
     raw_message = models.TextField(
         _(u'Raw Message Text'), help_text=_(u'Raw Message Text Help'),
         default=None, blank=True, null=True)

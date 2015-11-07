@@ -18,7 +18,7 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def save_inbound(transport, sender, recipient, original_recipient,
-                 raw_message, *args, **kwargs):
+                 raw_message, process=True, *args, **kwargs):
     '''
     Save `raw_message` (serialized email) to  :ref:`flier.smtp.models.Message`
     This is called by bounce hander defined in SMTP server
@@ -45,7 +45,8 @@ def save_inbound(transport, sender, recipient, original_recipient,
             original_recipient=original_recipient,
             raw_message=raw_message, )
 
-        message.process_message()
+        if process:
+            message.process_message()
 
     except:
         logger.error(traceback.format_exc())
@@ -56,13 +57,16 @@ def process_drop(*args, **kwargs):
     drop = getattr(settings, 'FLIER_SMTP_DROP', None)
     if not drop:
         logger.warn('No FLIER_SMTP_DROP defined in settings')
-        return
+        return 0
 
+    count = 0
     for m in glob.glob(drop + "/*.eml"):
         res = process_drop_mail(m)
         if res > 0:
             os.remove(m)
         time.sleep(0.1)
+        count += 1
+    return count
 
 
 @shared_task
@@ -93,4 +97,6 @@ def process_drop_mail(path, *args, **kwargs):
             models.Message.objects.from_mailobject(msg))
         return 3
 
-    return 0
+    # Save message just in case
+    models.Message.objects.from_mailobject(msg)
+    return 4
