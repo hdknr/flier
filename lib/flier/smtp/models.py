@@ -68,6 +68,8 @@ class Sender(BaseSender, methods.Sender):
         verbose_name = _('Sender')
         verbose_name_plural = _('Sender')
 
+    objects = managers.SenderQuerySet.as_manager()
+
     def __unicode__(self):
         return u"smtp:{0}".format(self.address)
 
