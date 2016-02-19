@@ -49,6 +49,16 @@ log = logging.getLogger('emailsmtp')
 
 class Command(djcommand.Command):
 
+    class DomainList(djcommand.SubCommand):
+        name = "ls_domain"
+        description = _("List Domain")
+        args = []
+
+        def run(self, params, **options):
+            from flier.smtp.models import Domain
+            for domain in Domain.objects.all():
+                print(domain.id, domain.domain, domain.transport)
+
     class Bounce(djcommand.SubCommand):
         '''
             http://www.postfix.org/pipe.8.html
