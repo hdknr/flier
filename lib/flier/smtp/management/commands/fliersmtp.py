@@ -35,8 +35,8 @@ Ubuntu:
 
 '''
 
-from django.utils.translation import ugettext_lazy as _
-from pycommand.djcommand import Command, SubCommand
+from django.utils.translation import ugettext as _
+from pycommand import djcommand
 # from bs4 import BeautifulSoup as Soup
 
 import sys
@@ -47,9 +47,9 @@ from flier.smtp.tasks import save_inbound
 log = logging.getLogger('emailsmtp')
 
 
-class Command(Command):
+class Command(djcommand.Command):
 
-    class Bounce(SubCommand):
+    class Bounce(djcommand.SubCommand):
         '''
             http://www.postfix.org/pipe.8.html
         '''
@@ -81,7 +81,7 @@ class Command(Command):
                 ''.join(sys.stdin.read()),          # raw_message
             )
 
-    class ProcessMessage(SubCommand):
+    class ProcessMessage(djcommand.SubCommand):
 
         name = "process_message"
         description = _("Process a Message Object")
@@ -94,7 +94,7 @@ class Command(Command):
             for m in Message.objects.filter(id__in=params.id):
                 m.process_message()
 
-    class ProcessDropMail(SubCommand):
+    class ProcessDropMail(djcommand.SubCommand):
 
         name = "process_drop_mail"
         description = _("Process a Dropped Message")
@@ -107,7 +107,7 @@ class Command(Command):
             for path in params.path:
                 print process_drop_mail(path)
 
-    class ProcessDrop(SubCommand):
+    class ProcessDrop(djcommand.SubCommand):
 
         name = "process_drop"
         description = _("Process a Dropped Message")
