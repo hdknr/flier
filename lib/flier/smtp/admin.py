@@ -6,6 +6,7 @@ from flier.admin import register, _T
 class ForwarderAdmin(admin.ModelAdmin):
     list_excludes = ('created_at', )
     raw_id_fields = ('forward', )
+    list_filter = ('domain', )
 
 
 class RelayAdmin(admin.ModelAdmin):
