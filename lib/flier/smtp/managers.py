@@ -7,6 +7,8 @@ from email import message_from_file
 
 class DomainQuerySet(models.QuerySet):
     def for_address(self, address, transport=None):
+        ''' return Domain object instance for a given email address
+        '''
         user, domain = address.split('@')
         obj = self.filter(domain=domain).first()
         if not obj and transport:
