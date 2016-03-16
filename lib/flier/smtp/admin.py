@@ -8,6 +8,7 @@ class ForwarderAdmin(admin.ModelAdmin):
     raw_id_fields = ('forward', )
     list_filter = ('domain', 'deleted', )
     date_hierarchy = 'updated_at'
+    search_fields = ('address', 'forward__address', )
 
 
 class RelayAdmin(admin.ModelAdmin):
