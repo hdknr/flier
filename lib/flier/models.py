@@ -57,7 +57,7 @@ class Address(BaseModel, methods.Address):
     '''
     address = models.EmailField(
         _('Email Address'),
-        help_text=_('Email Address Help'), max_length=50,
+        help_text=_('Email Address Help'), max_length=100,
         unique=True, db_index=True)
 
     domain = models.CharField(
