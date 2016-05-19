@@ -42,12 +42,14 @@ class AddressAdminForm(forms.ModelForm):
 class AddressAdmin(admin.ModelAdmin):
     list_excludes = ('created_at', )
     form = AddressAdminForm
-    search_fields = ('address', )
+    search_fields = ('address', 'domain', )
+    list_filter = ('enabled', )
 
 
 class SenderAdmin(admin.ModelAdmin):
     list_excludes = ('created_at', )
     list_additionals = ('instance_object', )
+    list_filter = ('enabled', )
     search_fields = ('address', )
     readonly_fields = ('instance_object', )
 

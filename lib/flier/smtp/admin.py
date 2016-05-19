@@ -18,9 +18,10 @@ class RelayAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
     list_excludes = ('created_at', 'raw_message', )
+    list_filter = ('domain', )
     raw_id_fields = ('relay', )
     date_hierarchy = 'updated_at'
-    search_fields = ('recipient', )
+    search_fields = ('recipient', 'sender', )
     exclude = ('raw_message', )
     readonly_fields = ('raw_message_text', )
 
@@ -30,5 +31,12 @@ class MessageAdmin(admin.ModelAdmin):
     raw_message_text.short_description = _("Message to Recipient")
     raw_message_text.allow_tags = True
 
+
+class DomainAdmin(admin.ModelAdmin):
+    list_filter = ('domain', 'transport', )
+
+
+class SenderAdmin(admin.ModelAdmin):
+    list_filter = ('enabled', 'domain', )
 
 register(__name__, globals())
