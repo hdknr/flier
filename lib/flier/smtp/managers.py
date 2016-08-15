@@ -18,7 +18,7 @@ class DomainQuerySet(models.QuerySet):
 
 class SenderQuerySet(models.QuerySet):
     def for_address(self, address, name=None):
-        dom_field = self.model._meta.get_field_by_name('domain')[0]
+        dom_field = self.model._meta.get_field('domain')
         dom = dom_field.related_model.objects.for_address(address)
         sender = dom.sender_set.filter(address=address).first()
         if not sender:
