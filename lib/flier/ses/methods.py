@@ -157,7 +157,7 @@ class Notification(object):
     @property
     def _topic(self):
         if not self.topic_id:
-            field, d, d, d = self._meta.get_field_by_name('topic')
+            field, d, d, d = self._meta.get_field('topic')
             self.topic = field.related_model.objects.filter(
                 arn=self.message_object.TopicArn).first()
             if self.topic:

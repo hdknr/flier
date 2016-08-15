@@ -58,7 +58,7 @@ class MessageQuerySet(models.QuerySet):
 
         _, from_address = parseaddr(obj['Return-Path'])
         _, to_address = parseaddr(obj['Delivered-To'])
-        doms = self.model._meta.get_field_by_name('domain')[0].related_model
+        doms = self.model._meta.get_field('domain').related_model
         domain = doms.objects.filter(domain=to_address.split('@')[1]).first()
         return self.create(
             domain=domain, sender=from_address, recipient=to_address,
