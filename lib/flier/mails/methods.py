@@ -71,7 +71,7 @@ class BaseMail(BaseMethod):
 
         return message
 
-    def activie_recipients(self, basetime=None):
+    def active_recipients(self, basetime=None):
         return self.recipient_set.active_set()
 
     def all_recipients(self):
