@@ -54,7 +54,7 @@ def enqueue_mails():
     '''Enqueue mails '''
     for mail in models.Mail.objects.queueing_set():
         mail.enqueue()
-        logger.info(u'{0} has been canceled task_id={1}'.format(
+        logger.info(u'{0} has been enqueued task_id={1}'.format(
             mail.id, mail.task_id))
 
 
