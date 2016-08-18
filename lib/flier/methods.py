@@ -1,5 +1,7 @@
 from django.core import serializers, mail
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from email.header import Header
 from email.utils import formataddr
@@ -81,6 +83,14 @@ class Address(object):
         # TODO: send signal for app to disable this address
         self.bounced += 1
         self.save()
+
+    @classmethod
+    def get_on_valid(cls, address):
+        try:
+            validate_email(address)
+            return cls.objects.get_or_create(address=address)[0]
+        except ValidationError:
+            return None
 
 
 class Recipient(object):

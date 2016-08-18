@@ -78,7 +78,7 @@ class Address(BaseModel, methods.Address):
         verbose_name_plural = _('Mail Address')
 
     def __unicode__(self):
-        return self.address
+        return u"{}".format(self.address)
 
     def save(self, *args, **kwargs):
         if self.address:
