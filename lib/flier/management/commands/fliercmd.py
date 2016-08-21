@@ -1,42 +1,39 @@
 # -*- coding: utf-8 -*-
-from django.utils.translation import ugettext as _
-from pycommand.djcommand import Command, SubCommand
-# from bs4 import BeautifulSoup as Soup
+from django.utils import translation
+from django.conf import settings
+import djclick as click
+from flier.utils import echo
+from logging import getLogger
 
-# import sys
-import logging
-
-log = logging.getLogger('flier')
+logger = getLogger('flier')
+translation.activate(settings.LANGUAGE_CODE)
 
 
-class Command(Command):
+@click.group(invoke_without_command=True)
+@click.pass_context
+def main(ctx):
+    pass
 
-    class ListSender(SubCommand):
-        name = "ls_sender"
-        description = _("List Senders")
-        args = [
-        ]
 
-        def run(self, params, **options):
-            from flier.models import Sender
-            for sender in Sender.objects.all():
-                print sender.id, sender
+@main.command()
+@click.pass_context
+def ls_sender(ctx):
+    from flier.models import Sender
+    for sender in Sender.objects.all():
+        echo(u"{{ sender.id }} {{ sender }}", sender=sender)
 
-    class MailTo(SubCommand):
-        name = "mail_to"
-        description = _("Create and send a mail message")
-        args = [
-            (('id',), dict(nargs=1, type=int, help="Snder ID")),
-            (('subject',), dict(nargs=1, help="Mail Subject")),
-            (('body',), dict(nargs=1, help="Mail Body")),
-            (('to',), dict(nargs='*', help="Recipiets Address")),
-        ]
 
-        def run(self, params, **options):
-            from flier.models import Sender
-            recipient = Sender.objects.get(
-                id=params.id[0]).create_recipient(address=params.to[0])
+@main.command()
+@click.argument('id')
+@click.argument('subject')
+@click.argument('body')
+@click.argument('to', nargs=-1)
+@click.pass_context
+def mail_to(ctx, id, subject, body, to):
+    from flier.models import Sender
 
-            recipient.create_message(
-                subject=params.subject[0],
-                body=params.body[0],).send()
+    for to_addr in to:
+        recipient = Sender.objects.get(id=id).create_recipient(
+            address=to_addr)
+
+        recipient.create_message(subject=subject, body=body).send()
