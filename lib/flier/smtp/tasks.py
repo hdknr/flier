@@ -11,7 +11,7 @@ import os
 import time
 
 from flier.models import Recipient
-import models
+from . import models
 
 logger = get_task_logger(__name__)
 
@@ -54,6 +54,9 @@ def save_inbound(transport, sender, recipient, original_recipient,
 
 @shared_task
 def process_drop(*args, **kwargs):
+    '''
+    process all files under django.conf.settings.FLIER_SMTP_DROP directory
+    '''
     drop = getattr(settings, 'FLIER_SMTP_DROP', None)
     if not drop:
         logger.warn('No FLIER_SMTP_DROP defined in settings')
@@ -71,6 +74,15 @@ def process_drop(*args, **kwargs):
 
 @shared_task
 def process_drop_mail(path, *args, **kwargs):
+    '''
+    Process a given mail file.
+    Saved to :ref:`flier.smtp.models.Message` and done something
+
+    1. Returned(Bounced back) mail
+    2. Forwaring Mail
+    3. Bounce back for a forwarded mail
+    4. Stray mail
+    '''
     if not os.path.isfile(path):
         return -1
 

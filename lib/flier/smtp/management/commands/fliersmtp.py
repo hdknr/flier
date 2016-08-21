@@ -34,95 +34,75 @@ Ubuntu:
         sudo apt-get install postfix mailutils
 
 '''
+from django.utils import translation
+from django.conf import settings
 
-from django.utils.translation import ugettext as _
-from pycommand import djcommand
-# from bs4 import BeautifulSoup as Soup
-
+import djclick as click
 import sys
-import logging
-
+from flier.utils import echo
 from flier.smtp.tasks import save_inbound
+from logging import getLogger
 
-log = logging.getLogger('emailsmtp')
+logger = getLogger('flier')
+translation.activate(settings.LANGUAGE_CODE)
 
 
-class Command(djcommand.Command):
+@click.group(invoke_without_command=True)
+@click.pass_context
+def main(ctx):
+    pass
 
-    class DomainList(djcommand.SubCommand):
-        name = "ls_domain"
-        description = _("List Domain")
-        args = []
 
-        def run(self, params, **options):
-            from flier.smtp.models import Domain
-            for domain in Domain.objects.all():
-                print(domain.id, domain.domain, domain.transport)
+@main.command()
+@click.pass_context
+def ls_domain(ctx):
+    from flier.smtp.models import Domain
+    for domain in Domain.objects.all():
+        echo(u"{{ domain.id }} {{ domain.domain}} {{ domain.transport }}",
+             domain=domain)
 
-    class Bounce(djcommand.SubCommand):
-        '''
-            http://www.postfix.org/pipe.8.html
-        '''
 
-        name = "bounce"
-        description = "bounce by incoming mail"
-        args = [
-            (('transport',), dict(nargs=1, help="Transport Name")),
-            (('sender',), dict(nargs=1, help="Sender Address")),
-            (('recipient',), dict(nargs=1, help="Recipient Address")),
-            (('original_recipient',),
-             dict(nargs=1, help="Original Recipient Address")),
-        ]
+@main.command()
+@click.argument('transport')
+@click.argument('sender')
+@click.argument('recipient')
+@click.argument('original_recipient')
+@click.pass_context
+def bounce(ctx, transport, sender, recipient, original_recipient):
+    '''
+        http://www.postfix.org/pipe.8.html
+    '''
 
-        def run(self, params, **options):
-            ''' read stdin and save it to `flier.smtp.models.Message`
-            '''
+    if sys.stdin.isatty():
+        #: no stdin
+        logger.warn('no stdin')
+        return
 
-            if sys.stdin.isatty():
-                #: no stdin
-                log.warn('no stdin')
-                return
+    save_inbound(
+        transport, sender, recipient, original_recipient,
+        ''.join(sys.stdin.read()),          # raw_message
+    )
 
-            save_inbound(
-                params.transport[0],
-                params.sender[0],
-                params.recipient[0],
-                params.original_recipient[0],
-                ''.join(sys.stdin.read()),          # raw_message
-            )
 
-    class ProcessMessage(djcommand.SubCommand):
+@main.command()
+@click.argument('id')
+@click.pass_context
+def process_message(ctx, id):
+    from flier.smtp.models import Message
+    for m in Message.objects.filter(id__in=id):
+        m.process_message()
 
-        name = "process_message"
-        description = _("Process a Message Object")
-        args = [
-            (('id',), dict(nargs=1, help="Transport Name")),
-        ]
 
-        def run(self, params, **options):
-            from flier.smtp.models import Message
-            for m in Message.objects.filter(id__in=params.id):
-                m.process_message()
+@main.command()
+@click.argument('path')
+@click.pass_context
+def process_drop_mail(ctx, path):
+    from flier.smtp.tasks import process_drop_mail
+    echo(u"{{ msg }}", msg=process_drop_mail(path))
 
-    class ProcessDropMail(djcommand.SubCommand):
 
-        name = "process_drop_mail"
-        description = _("Process a Dropped Message")
-        args = [
-            (('path',), dict(nargs='*', help="Mail Message File")),
-        ]
-
-        def run(self, params, **options):
-            from flier.smtp.tasks import process_drop_mail
-            for path in params.path:
-                print process_drop_mail(path)
-
-    class ProcessDrop(djcommand.SubCommand):
-
-        name = "process_drop"
-        description = _("Process a Dropped Message")
-        args = []
-
-        def run(self, params, **options):
-            from flier.smtp.tasks import process_drop
-            print "mails :", process_drop()
+@main.command()
+@click.pass_context
+def process_drop(ctx):
+    from flier.smtp.tasks import process_drop
+    echo(u"{{ msg }}", msg=process_drop())
