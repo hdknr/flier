@@ -22,10 +22,10 @@ class MailQuerySet(models.QuerySet):
     def queueing_set(self, basetime=None):
         basetime = basetime or now()
         return self.filter(
-            models.Q(due_at__isnull=True) | models.Q(due_at__lte=basetime),
-            status=self.model.STATUS_QUEUED,
+            models.Q(due_at__isnull=True) | models.Q(due_at__lte=basetime), # due_at is passed or not specified # NOQA
+            status=self.model.STATUS_QUEUED,    # queued
             sent_at__isnull=True,               # not yet queued
-        ).exclude(task_id__regex=r'.+')
+        ).exclude(task_id__regex=r'.+')         # not yet job queued
 
 
 class RecipientQuerySet(models.QuerySet):

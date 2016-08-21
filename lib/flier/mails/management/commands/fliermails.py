@@ -17,9 +17,12 @@ def main(ctx):
 
 
 @main.command()
+@click.option('--queueing', '-q', is_flag=True)
 @click.pass_context
-def ls_mails(ctx):
+def ls_mails(ctx, queueing):
+    ''' list mails'''
     from flier.mails.models import Mail
-    for mail in Mail.objects.all():
+    mails = queueing and Mail.objects.queueing_set() or Mail.objects.all()
+    for mail in mails:
         echo(u"{{ mail.id }}:{{ mail.sender }}:{{ mail.subject}}:{{ mail.due_at|default:'' }}",     # NOQA
              mail=mail)
