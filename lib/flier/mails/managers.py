@@ -24,7 +24,7 @@ class MailQuerySet(models.QuerySet):
         return self.filter(
             models.Q(due_at__isnull=True) | models.Q(due_at__lte=basetime),
             status=self.model.STATUS_QUEUED,
-            sent_at__isnull=True,
+            sent_at__isnull=True,               # not yet queued
         ).exclude(task_id__regex=r'.+')
 
 
