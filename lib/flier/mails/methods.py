@@ -5,6 +5,9 @@ from datetime import timedelta
 import time
 from flier.methods import BaseMethod
 
+import logging
+logger = logging.getLogger('flier.mails')
+
 
 class Service(object):
     def __init__(self, *args, **kwargs):
@@ -150,6 +153,12 @@ class MailStatus(object):
             if save:
                 self.save()
 
+    def complete(self):
+        self.task_id = ''
+        self.status = self.STATUS_SENT
+        self.sent_at = now()
+        self.save()
+
 
 class Mail(object):
     '''Mail Delivery Definition
@@ -162,6 +171,14 @@ class Mail(object):
         self.status = self.STATUS_DISABLED
         self.sent_at = None
         self.save()
+
+
+class MailCancel(object):
+
+    def cancel(self):
+        self.delete()
+        self.mail.task_id = ''
+        self.mail.save()
 
 
 class Recipient(object):

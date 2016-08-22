@@ -104,7 +104,7 @@ class Mail(BaseMail, MailStatus, methods.Mail):
         return self.subject
 
 
-class MailCancel(BaseModel):
+class MailCancel(BaseModel, methods.MailCancel):
     mail = models.ForeignKey(Mail)
     task_id = models.CharField(
         _('Task ID'), help_text=_('Task ID Help'),  max_length=40,

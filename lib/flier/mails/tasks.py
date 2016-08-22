@@ -65,15 +65,13 @@ def send_mail(mail, withbreak=True):
     :param Mail mail:  :ref:`emailqueue.models.Mail` or id
     '''
     mail = get_object(mail, models.Mail)
+    job = getattr(send_mail, 'request', None)
 
-    if hasattr(send_mail, 'request'):
-        cancel = mail.instance.mailcancel_set.filter(
-            task_id=send_mail.request.id).first()
-        if cancel:
-            cancel.delete()
-            mail.task_id = ''
-            mail.save()
-            logger.warn(u'{0} has been canceled'.format(send_mail.request.id))
+    if job:
+        for cancel in mail.instance.mailcancel_set.filter(
+                task_id=send_mail.request.id):
+            cancel.cancel()
+            logger.warn(u'{0} has been canceled'.format(job.id))
             return
 
     if mail.sent_at or mail.status == mail.STATUS_DISABLED:
@@ -91,12 +89,16 @@ def send_mail(mail, withbreak=True):
 
     sender = mail.sender.instance            # Actual Sender
     for recipient in mail.active_recipients():
+
         # INTERUPTED:
         if withbreak and mail.delay():    # make this Mail pending state
             logger.info("Mail({0}) is delayed".format(mail.id))
-            # enqueue another task
-            send_mail.apply_async(
-                args=[mail.id], eta=make_eta(mail.due_at))
+
+            # enqueue the other task for sending this Mail
+            if job:
+                send_mail.apply_async(
+                    args=[mail.id], eta=make_eta(mail.due_at))
+
             # terminate this task
             return
 
@@ -115,10 +117,7 @@ def send_mail(mail, withbreak=True):
         sender.wait()
 
     # END: completed sending
-    mail.task_id = ''
-    mail.status = mail.STATUS_SENT
-    mail.sent_at = now()
-    mail.save()
+    mail.complete()
 
 
 @receiver(BackendSignal.sent_signal)
