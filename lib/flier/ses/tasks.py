@@ -5,11 +5,9 @@ from flier.models import BaseMessage, Recipient, Address
 from flier.ses import models
 # from celery.utils.log import get_task_logger
 
-import logging
+from logging import getLogger
 
-logger = logging.getLogger('flier.ses')
-# logger = get_task_logger('flier.mails')
-# import traceback
+logger = getLogger('flier.ses')
 
 
 @receiver(BaseMessage.confirm_signal, sender=models.Notification)
