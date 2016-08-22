@@ -6,21 +6,21 @@ from flier.admin import register
 import models
 
 
-class RecipientAdminForm(forms.ModelForm):
+class MailRecipientAdminForm(forms.ModelForm):
     class Meta:
-        model = models.Recipient
+        model = models.MailRecipient
         # exclude = ['key', 'message_id', 'status', 'message', ]
         fields = ['mail', 'to', ]
 
     def is_valid(self):
-        res = super(RecipientAdminForm, self).is_valid()
+        res = super(MailRecipientAdminForm, self).is_valid()
         if res:
             self.instance.sender = self.cleaned_data['mail'].sender
         return res
 
 
-class RecipientAdmin(admin.ModelAdmin):
-    form = RecipientAdminForm
+class MailRecipientAdmin(admin.ModelAdmin):
+    form = MailRecipientAdminForm
     raw_id_fields = ['mail', 'to', ]
     actions = ['send_message', ]
 

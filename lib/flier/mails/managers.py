@@ -28,5 +28,9 @@ class MailQuerySet(models.QuerySet):
         ).exclude(task_id__regex=r'.+')         # not yet job queued
 
 
-class RecipientQuerySet(models.QuerySet):
-    pass
+class MailRecipientQuerySet(models.QuerySet):
+
+    def opt(self, mail, address):
+        from flier.models import Address
+        to, created = Address.objects.get_or_create(address=address)
+        return self.get_or_create(mail=mail, to=to, sender=mail.sender)[0]

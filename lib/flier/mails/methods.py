@@ -75,10 +75,10 @@ class BaseMail(BaseMethod):
         return message
 
     def active_recipients(self, basetime=None):
-        return self.recipient_set.active_set()
+        return self.mailrecipient_set.active_set()
 
     def all_recipients(self):
-        return self.recipient_set.all()
+        return self.mailrecipient_set.all()
 
     def enqueue(self):
         '''Enqueue a Mail to job queue. '''
@@ -87,6 +87,10 @@ class BaseMail(BaseMethod):
             [self.id], eta=tasks.make_eta(self.due_at or now()))
         self.task_id = r.id
         self.save()
+
+    def send(self):
+        from flier.mails import tasks
+        tasks.send_mail(self)
 
 
 class MailStatus(object):
@@ -181,7 +185,7 @@ class MailCancel(object):
         self.mail.save()
 
 
-class Recipient(object):
+class MailRecipient(object):
     '''Recipients for a Mail
     '''
     pass

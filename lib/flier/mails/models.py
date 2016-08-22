@@ -115,17 +115,17 @@ class MailCancel(BaseModel, methods.MailCancel):
         verbose_name_plural = _('Mail Cancel')
 
 
-class AbstractRecipient(BaseRecipient, methods.Recipient):
-    class Meta:
-        abstract = True
-
-
-class Recipient(BaseRecipient, methods.Recipient):
+class MailRecipient(BaseRecipient, methods.MailRecipient):
     mail = models.ForeignKey(Mail)
 
     class Meta:
         verbose_name = _('Mail Recipient')
         verbose_name_plural = _('Mail Recipient')
+
+    objects = managers.MailRecipientQuerySet.as_manager()
+
+    def save(self, *args, **kwargs):
+        super(MailRecipient, self).save(*args, **kwargs)
 
 
 class Attachment(BaseModel, methods.Attachment):
