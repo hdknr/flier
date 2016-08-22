@@ -6,6 +6,11 @@ from flier.admin import register
 import models
 
 
+class MailAdmin(admin.ModelAdmin):
+    list_filter = ('status', )
+    list_excludes = ('body', 'html', )
+
+
 class MailRecipientAdminForm(forms.ModelForm):
     class Meta:
         model = models.MailRecipient
