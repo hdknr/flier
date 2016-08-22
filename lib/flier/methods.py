@@ -35,6 +35,7 @@ class BaseMethod(object):
                     **{i.field_name: self.id}).first()
                 if self._instance:
                     break
+            self._instance = self._instance or self
             return self._instance
 
         return getattr(self, '_instance', _cache())

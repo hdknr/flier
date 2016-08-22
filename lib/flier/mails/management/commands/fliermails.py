@@ -25,11 +25,11 @@ def ls_mails(ctx, queueing):
     mails = queueing and Mail.objects.queueing_set() or Mail.objects.all()
     for mail in mails:
         echo(u"{{ mail.id }}:\
-{{ mail.sender }}:\
+{{ opt.app_label }}.{{ opt.object_name }}:\
 {{ mail.subject}}:\
 to={{ mail.mailrecipient_set.count}}:\
 {{ mail.due_at|default:'' }}",     # NOQA
-             mail=mail)
+             mail=mail, opt=mail.instance._meta)
 
 
 @main.command()
