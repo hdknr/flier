@@ -76,7 +76,7 @@ msgstr "メールテンプレート"
 
 #: mails/models.py:52
 msgid "Disabled Mail"
-msgstr "無効"
+msgstr "未送信"
 
 #: mails/models.py:53
 msgid "Queued Mail"
