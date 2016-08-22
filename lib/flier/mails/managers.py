@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
+from flier.managers import RecipientQuerySet
 import utils
 
 
@@ -28,7 +29,7 @@ class MailQuerySet(models.QuerySet):
         ).exclude(task_id__regex=r'.+')         # not yet job queued
 
 
-class MailRecipientQuerySet(models.QuerySet):
+class MailRecipientQuerySet(RecipientQuerySet):
 
     def opt(self, mail, address):
         from flier.models import Address

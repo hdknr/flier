@@ -4,6 +4,7 @@ from django.conf import settings
 
 import djclick as click
 from flier.utils import echo
+from flier.mails.models import Mail
 from logging import getLogger
 
 logger = getLogger('flier')
@@ -20,9 +21,20 @@ def main(ctx):
 @click.option('--queueing', '-q', is_flag=True)
 @click.pass_context
 def ls_mails(ctx, queueing):
-    ''' list mails'''
-    from flier.mails.models import Mail
+    ''' list all Mail'''
     mails = queueing and Mail.objects.queueing_set() or Mail.objects.all()
     for mail in mails:
-        echo(u"{{ mail.id }}:{{ mail.sender }}:{{ mail.subject}}:{{ mail.due_at|default:'' }}",     # NOQA
+        echo(u"{{ mail.id }}:\
+{{ mail.sender }}:\
+{{ mail.subject}}:\
+to={{ mail.mailrecipient_set.count}}:\
+{{ mail.due_at|default:'' }}",     # NOQA
              mail=mail)
+
+
+@main.command()
+@click.argument('id')
+@click.pass_context
+def send_mail(ctx, id):
+    '''Send a Mail specified by id '''
+    Mail.objects.get(id=id).send()
