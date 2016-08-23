@@ -131,7 +131,7 @@ class Source(object):
         if self.enabled:
             return EmailMultiAlternatives(
                 from_email=self.address,            # Only Verified Address
-                connection=self.backend,            # IMPORTANT
+                connection=self.backend,            # IMPORTANT: SesBackend
                 *args, **kwargs
             )
 

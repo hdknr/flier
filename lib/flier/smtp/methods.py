@@ -64,7 +64,7 @@ class Sender(object):
         kwargs['from_email'] = self.verp()
         EmailMultiAlternatives.encoding = kwargs.get('encoding',  None)
         return EmailMultiAlternatives(
-            connection=self.backend,
+            connection=self.backend,                # SmtpBackend
             *args, **kwargs)
 
 
