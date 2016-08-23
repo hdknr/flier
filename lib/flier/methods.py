@@ -1,14 +1,13 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core import serializers, mail
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 from django.db.models.fields.related import OneToOneRel
 
 from email.header import Header
 from email.utils import formataddr
+from .validators import validate_email
+from . import utils
 import time
-
-import utils
 
 
 class BaseModel(object):
