@@ -48,10 +48,10 @@ class RelayQuerySet(models.QuerySet):
 
 
 class MessageQuerySet(models.QuerySet):
-    def from_file(self, path):
-        return self.from_mailobject(message_from_file(open(path)))
+    def from_file(self, path, **kwargs):
+        return self.from_mailobject(message_from_file(open(path)), **kwargs)
 
-    def from_mailobject(self, obj):
+    def from_mailobject(self, obj, **kwargs):
         '''
             :param email.message.Message obj:
         '''
@@ -62,4 +62,5 @@ class MessageQuerySet(models.QuerySet):
         domain = doms.objects.filter(domain=to_address.split('@')[1]).first()
         return self.create(
             domain=domain, sender=from_address, recipient=to_address,
-            original_recipient=to_address, raw_message=obj.as_string())
+            original_recipient=to_address, raw_message=obj.as_string(),
+            **kwargs)

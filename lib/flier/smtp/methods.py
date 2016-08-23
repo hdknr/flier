@@ -6,9 +6,10 @@ import backends
 import uuid
 from flier.models import Recipient, Address
 
-import logging
+import traceback
+from logging import getLogger
 
-logger = logging.getLogger('flier')
+logger = getLogger('flier')
 
 
 class Domain(object):
@@ -80,9 +81,16 @@ class Forwarder(object):
         message.relay_from = self.domain.verp()
         message.save()
 
-        backends.SmtpBackend().send_raw_message(
-            message.relay_from, self.forward.address,
-            message.raw_message)
+        try:
+            backends.SmtpBackend().send_raw_message(
+                message.relay_from, self.forward.address,
+                message.raw_message)
+        except:
+            errors = traceback.format_exc()
+            logger.error(errors)
+            message.status = 'forwarding error'
+            message.errors = errors
+            message.save()
 
 
 class Relay(object):

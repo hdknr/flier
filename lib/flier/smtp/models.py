@@ -185,6 +185,14 @@ class Message(MailMessage, RelayedMessage, methods.Message):
     processed_at = models.DateTimeField(
         _('Processed At'), null=True, blank=True, default=None)
 
+    status = models.CharField(
+        _('Message Status'), max_length=30,
+        null=True, blank=True, default=None)
+
+    errors = models.TextField(
+        _('Message Errors'),
+        null=True, blank=True, default=None)
+
     class Meta:
         verbose_name = _(u'Message')
         verbose_name_plural = _(u'Message')

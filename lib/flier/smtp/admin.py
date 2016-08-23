@@ -17,13 +17,13 @@ class RelayAdmin(admin.ModelAdmin):
 
 
 class MessageAdmin(admin.ModelAdmin):
-    list_excludes = ('created_at', 'raw_message', )
-    list_filter = ('domain', )
+    list_excludes = ('created_at', 'raw_message', 'errors', )
+    list_filter = ('domain', 'status', )
     raw_id_fields = ('relay', )
     date_hierarchy = 'updated_at'
     search_fields = ('recipient', 'sender', )
-    exclude = ('raw_message', )
-    readonly_fields = ('raw_message_text', )
+    exclude = ('raw_message', 'status', 'errors', )
+    readonly_fields = ('raw_message_text', 'status', 'errors', )
 
     def raw_message_text(self, obj):
         return _T('''<hr><pre>{{ m }}</pre>''', m=obj.raw_message)

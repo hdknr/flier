@@ -104,16 +104,18 @@ def process_drop_mail(path, *args, **kwargs):
     # Forwarding
     forwarder = models.Forwarder.objects.filter(address=to).first()
     if forwarder:
-        forwarder.forward_message(models.Message.objects.from_mailobject(msg))
+        forwarder.forward_message(
+            models.Message.objects.from_mailobject(msg, status='forwarding'))
         return 2
 
     # Forwarding Bounced
     original = models.Message.objects.filter(relay_from=to).first()
     if original:
         original.bounce_back(
-            models.Message.objects.from_mailobject(msg))
+            models.Message.objects.from_mailobject(
+                msg, status='bounced forward'))
         return 3
 
     # Save message just in case
-    models.Message.objects.from_mailobject(msg)
+    models.Message.objects.from_mailobject(msg, status='no reason')
     return 4
