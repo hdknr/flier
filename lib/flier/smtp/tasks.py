@@ -64,11 +64,14 @@ def process_drop(*args, **kwargs):
 
     count = 0
     for m in glob.glob(drop + "/*.eml"):
-        res = process_drop_mail(m)
-        if res > 0:
-            os.remove(m)
-        time.sleep(0.1)
-        count += 1
+        try:
+            res = process_drop_mail(m)
+            if res > 0:
+                os.remove(m)
+            time.sleep(0.1)
+            count += 1
+        except:
+            logger.error(traceback.format_exc())
     return count
 
 
