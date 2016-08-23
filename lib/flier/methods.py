@@ -1,7 +1,8 @@
-from django.core import serializers, mail
 from django.contrib.contenttypes.models import ContentType
+from django.core import serializers, mail
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.db.models.fields.related import OneToOneRel
 
 from email.header import Header
 from email.utils import formataddr
@@ -29,12 +30,14 @@ class BaseMethod(object):
         def _cache():
             self._instance = self
             for i in self._meta.related_objects:
-                if not issubclass(i.related_model, self._meta.model):
-                    continue
-                self._instance = i.related_model.objects.filter(
-                    **{i.field_name: self.id}).first()
-                if self._instance:
-                    break
+                if all([
+                    isinstance(i, OneToOneRel),
+                    issubclass(i.related_model, self._meta.model)
+                ]):
+                    self._instance = i.related_model.objects.filter(
+                        **{i.field_name: self.id}).first()
+                    if self._instance:
+                        break
             self._instance = self._instance or self
             return self._instance
 
