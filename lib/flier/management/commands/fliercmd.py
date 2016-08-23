@@ -3,6 +3,7 @@ from django.utils import translation
 from django.conf import settings
 import djclick as click
 from flier.utils import echo
+from flier import validators
 from logging import getLogger
 
 logger = getLogger('flier')
@@ -37,3 +38,12 @@ def mail_to(ctx, id, subject, body, to):
             address=to_addr)
 
         recipient.create_message(subject=subject, body=body).send()
+
+
+@main.command()
+@click.argument('addrs', nargs=-1)
+@click.pass_context
+def validate_email(ctx, addrs):
+    for a in addrs:
+        echo(u"{{check.0}} : {{check.1}}",
+             check=validators.validate_email.check(a))
