@@ -87,10 +87,12 @@ def process_drop_mail(path, *args, **kwargs):
     4. Stray mail
     '''
     if not os.path.isfile(path):
+        logger.debug("no such file:", path)
         return -1
 
     msg = message_from_file(open(path))
     to = msg['Delivered-To']
+    logger.debug("processing:{} {}".format(to, path))
 
     # Bounced Back
     recipient = Recipient.objects.filter(key=to).first()
@@ -102,7 +104,7 @@ def process_drop_mail(path, *args, **kwargs):
     # Forwarding
     forwarder = models.Forwarder.objects.filter(address=to).first()
     if forwarder:
-        forwarder.forward(models.Message.objects.from_mailobject(msg))
+        forwarder.forward_message(models.Message.objects.from_mailobject(msg))
         return 2
 
     # Forwarding Bounced
