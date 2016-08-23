@@ -42,6 +42,12 @@ class ForwarderQuerySet(models.QuerySet):
             obj.save()
         return obj
 
+    def find_destination(self, address):
+        '''Forwading address or Address if valid'''
+        from flier.models import Address
+        forwarder = self.filter(address=address).first()
+        return forwarder and forwarder.forward or Address.get_on_valid(address)
+
 
 class RelayQuerySet(models.QuerySet):
     pass
