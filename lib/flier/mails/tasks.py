@@ -30,7 +30,8 @@ def get_object(instance, model_class):
     mail = isinstance(instance, model_class) and \
         model_class.objects.get(id=instance.id) or \
         model_class.objects.get(id=instance)
-    return mail.instance        # return subclass instance if exists
+    # return mail.instance        # return subclass instance if exists
+    return mail
 
 
 def get_return_path_and_to(sender, mail, recipient):
@@ -74,9 +75,17 @@ def send_mail(mail, withbreak=True):
             logger.warn(u'{0} has been canceled'.format(job.id))
             return
 
-    if mail.sent_at or mail.status == mail.STATUS_DISABLED:
+    if mail.status == mail.STATUS_DISABLED:
         # Already completed
-        logger.warn(u"{0} {1} {2} {3}".format(
+        logger.warn(u"{0} sent_at:{1} status:{2} subject:{3}".format(
+            u"This mail is not in sending queue.",
+            mail.sent_at, mail.get_status_display(), mail.subject,
+        ))
+        return
+
+    if mail.sent_at:
+        # Already completed
+        logger.warn(u"{0} sent_at:{1} status:{2} subject:{3}".format(
             u"This message has been already processed",
             mail.sent_at, mail.get_status_display(), mail.subject,
         ))
@@ -89,7 +98,11 @@ def send_mail(mail, withbreak=True):
         mail.save()         # post_save signal fires again
 
     sender = mail.sender.instance            # Actual Sender
-    for recipient in mail.active_recipients():
+    recipients = mail.active_recipients()    # Recipient list
+    logger.debug(u"sender:{} recipeints:{}".format(
+        sender.address, recipients.count()))
+
+    for recipient in recipients:
 
         # INTERUPTED:
         if withbreak and mail.delay():    # make this Mail pending state
