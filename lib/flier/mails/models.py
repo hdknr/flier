@@ -2,7 +2,7 @@
 '''
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
+from django.contrib.contenttypes.fields import GenericRelation
 
 from flier.models import (
     BaseModel, Sender, Recipient as BaseRecipient)
@@ -93,6 +93,9 @@ class Mail(BaseMail, MailStatus, methods.Mail):
     ctx = models.TextField(
         _('Context Data'), help_text=_('Context Data Help'),
         default=None, null=True, blank=True)
+
+    recipients = GenericRelation(
+        BaseRecipient, related_query_name='mails')
 
     class Meta:
         verbose_name = _('Mail')

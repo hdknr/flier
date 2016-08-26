@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import dispatcher
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 
 from flier import (methods, managers)
 
@@ -86,7 +89,22 @@ class Address(BaseModel, methods.Address):
         super(Address, self).save(*args, **kwargs)
 
 
-class Recipient(BaseModel, methods.Recipient):
+class RecipientContext(models.Model):
+    content_type = models.ForeignKey(
+        ContentType, verbose_name=_('Recipient Context'),
+        null=True, blank=True,)
+
+    object_id = models.PositiveIntegerField(
+        _('Recipint Contenxt Instance'),
+        null=True, blank=True)
+
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        abstract = True
+
+
+class Recipient(RecipientContext, BaseModel, methods.Recipient):
     '''Recipients for a Mail
     '''
     key = models.CharField(

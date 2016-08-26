@@ -30,7 +30,7 @@ def get_object(instance, model_class):
     mail = isinstance(instance, model_class) and \
         model_class.objects.get(id=instance.id) or \
         model_class.objects.get(id=instance)
-    return mail.instance
+    return mail.instance        # return subclass instance if exists
 
 
 def get_return_path_and_to(sender, mail, recipient):
@@ -84,6 +84,7 @@ def send_mail(mail, withbreak=True):
 
     # BEGIN:
     if mail.status != mail.STATUS_SENDING:
+        mail.prepare_sending()
         mail.status = mail.STATUS_SENDING
         mail.save()         # post_save signle fires again
 

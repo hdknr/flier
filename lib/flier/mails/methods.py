@@ -176,6 +176,10 @@ class Mail(object):
         self.sent_at = None
         self.save()
 
+    def prepare_sending(self):
+        ''' prepare for sending. override this method'''
+        pass
+
 
 class MailCancel(object):
 

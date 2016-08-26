@@ -62,7 +62,7 @@ class SenderAdmin(admin.ModelAdmin):
 
 
 class RecipientAdmin(admin.ModelAdmin):
-    list_filter = ('sender', 'status', )
+    list_filter = ('sender', 'status', 'content_type', )
     list_excludes = ('created_at', 'message', )
     date_hierarchy = 'sent_at'
     raw_id_fields = ('sender', 'to', )
