@@ -28,7 +28,7 @@ def ls_mails(ctx, queueing):
 {{ opt.app_label }}.{{ opt.object_name }}\t\
 {{ mail.get_status_display }}\t\
 {{ mail.subject }}\t\
-to={{ mail.mailrecipient_set.count}}\t\
+to={{ mail.recipients.count}}\t\
 {{ mail.due_at|default:'' }}",     # NOQA
              mail=mail, opt=mail.instance._meta)
 

@@ -83,10 +83,10 @@ def send_mail(mail, withbreak=True):
         return
 
     # BEGIN:
-    if mail.status != mail.STATUS_SENDING:
+    if mail.status == mail.STATUS_QUEUED:
         mail.prepare_sending()
         mail.status = mail.STATUS_SENDING
-        mail.save()         # post_save signle fires again
+        mail.save()         # post_save signal fires again
 
     sender = mail.sender.instance            # Actual Sender
     for recipient in mail.active_recipients():

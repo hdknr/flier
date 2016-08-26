@@ -75,10 +75,10 @@ class BaseMail(BaseMethod):
         return message
 
     def active_recipients(self, basetime=None):
-        return self.mailrecipient_set.active_set()
+        return self.recipients.active_set()
 
     def all_recipients(self):
-        return self.mailrecipient_set.all()
+        return self.recipients.all()
 
     def enqueue(self):
         '''Enqueue a Mail to job queue. '''
