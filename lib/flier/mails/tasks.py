@@ -92,12 +92,12 @@ def send_mail(mail, withbreak=True):
 
     # BEGIN:
     if mail.status == mail.STATUS_QUEUED:
-        mail.prepare_sending()
+        mail.instance.prepare_sending()         # subclass prepare sending
         mail.status = mail.STATUS_SENDING
         mail.save()         # post_save signal fires again
 
-    sender = mail.sender.instance            # Actual Sender
-    recipients = mail.active_recipients()    # Recipient list
+    sender = mail.sender.instance               # Actual Sender
+    recipients = mail.active_recipients()       # Mail Recipient list
     logger.warn(_("send_mail:Sending sender:{} recipeints:{}").format(
         sender.address, recipients.count()))
 
@@ -118,8 +118,9 @@ def send_mail(mail, withbreak=True):
         # Get latest Mail.status
         mail.refresh_from_db()
         if mail.status != mail.STATUS_SENDING:
-            msg = ("send_mail:Sending Mail({0}) has been interrupted")
-            logger.warn(msg.format(mail.id))
+            logger.warn(
+                _("send_mail:Mail({}) has been interrupted status:{}").format(
+                    mail.id, mail.get_status_display()))
             return
 
         # Send mail to each recipient
@@ -141,6 +142,7 @@ def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
     if not recipient:
         logger.error(u"Recpient for message-id({}) does not exists".format(
             message_id))
+        return
 
     try:
         recipient.key = key

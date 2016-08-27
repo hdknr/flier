@@ -4,6 +4,8 @@ from django.utils.encoding import force_bytes
 from flier.backends import BackendSignal
 import smtplib
 import traceback
+from logging import getLogger
+logger = getLogger()
 
 
 class SmtpBackend(smtp.EmailBackend, BackendSignal):
@@ -40,7 +42,8 @@ class SmtpBackend(smtp.EmailBackend, BackendSignal):
             self.open()
             self.connection.sendmail(
                 from_email, [to_email], force_bytes(message_string))
-        except smtplib.SMTPException:
+        except smtplib.SMTPException, ex:
+            logger.error(_("SmtpBackend.send_raw_message:{}").format(ex))
             if not self.fail_silently:
                 raise
             return False
