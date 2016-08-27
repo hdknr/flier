@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.utils import translation
+from django.utils import translation, timezone
 from django.conf import settings
+from django.core import serializers
 
 import djclick as click
 from flier.utils import echo
@@ -44,3 +45,42 @@ active={{ mail.active_recipients.count}}\t\
 def send_mail(ctx, id):
     '''Send a Mail specified by id '''
     Mail.objects.get(id=id).send()
+
+
+@main.command()
+@click.argument('id')
+@click.argument('status')
+@click.pass_context
+def set_status(ctx, id, status):
+    '''force change status'''
+    mail = Mail.objects.filter(id=id).first()
+
+    if not mail:
+        echo(u"No mail for {{ id }}", id=id)
+        return
+
+    code = getattr(Mail, 'STATUS_' + status.upper(), -1)
+    if code == -1:
+        options = ['DISABLED', 'QUEUED', 'SENDING', 'SENT']
+        echo(u"status must be in {{ o|safe }}", o=str(options))
+        return
+
+    mail.status = code
+    mail.sent_at = timezone.now() if code == Mail.STATUS_SENT else None
+    mail.save()
+
+
+@main.command()
+@click.argument('id')
+@click.argument('address', nargs=-1)
+@click.pass_context
+def recipients(ctx, id, address):
+
+    mail = Mail.objects.filter(id=id).first()
+
+    if not mail:
+        echo(u"No mail for {{ id }}", id=id)
+        return
+
+    echo(serializers.serialize(
+        'json', mail.recipients.filter(to__address__in=address)))
