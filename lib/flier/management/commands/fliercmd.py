@@ -52,6 +52,9 @@ def validate_email(ctx, addrs):
 
 @main.command()
 @click.option('--message_id', '-m')
+@click.option('--key', '-k')
+@click.option('--content_type', '-c')
+@click.option('--object_id', '-o')
 @click.option('--limit', '-l', default=20)
 @click.pass_context
 def recipients(ctx, limit, **kwargs):
