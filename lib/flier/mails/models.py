@@ -44,10 +44,10 @@ class MailTemplate(BaseMail, methods.MailTemplate):
 class MailStatus(models.Model, methods.MailStatus):
     '''Mail Status
     '''
-    STATUS_DISABLED = 0
-    STATUS_QUEUED = 10
-    STATUS_SENDING = 20
-    STATUS_SENT = 30
+    STATUS_DISABLED = 'disabled'
+    STATUS_QUEUED = 'queued'
+    STATUS_SENDING = 'sending'
+    STATUS_SENT = 'sent'
     STATUS = (
         (STATUS_DISABLED, _('Disabled Mail'), ),
         (STATUS_QUEUED, _('Queued Mail'), ),
@@ -55,8 +55,8 @@ class MailStatus(models.Model, methods.MailStatus):
         (STATUS_SENT, _('Sent Mail'), ),
     )
 
-    status = models.IntegerField(
-        _('Mail Status'), help_text=_('Mail Status Help'),
+    status = models.CharField(
+        _('Mail Status'), help_text=_('Mail Status Help'), max_length=20,
         default=STATUS_DISABLED, choices=STATUS)
 
     due_at = models.DateTimeField(

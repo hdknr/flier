@@ -12,6 +12,7 @@ class MailAdmin(admin.ModelAdmin):
     list_excludes = ('body', 'html', )
     list_additionals = ('instance_link', )
     readonly_fields = ('instance_link', )
+    raw_id_fields = ('sender', )
 
     def instance_link(self, obj):
         p = dict(

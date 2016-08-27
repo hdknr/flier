@@ -47,26 +47,23 @@ def send_mail(ctx, id):
     Mail.objects.get(id=id).send()
 
 
-@main.command()
+@main.command(
+    help="change Mail status :[{}]".format(
+        '|'.join(i[0] for i in Mail.STATUS)))
 @click.argument('id')
 @click.argument('status')
 @click.pass_context
 def set_status(ctx, id, status):
     '''force change status'''
+    status = status.lower()
     mail = Mail.objects.filter(id=id).first()
 
     if not mail:
         echo(u"No mail for {{ id }}", id=id)
         return
 
-    code = getattr(Mail, 'STATUS_' + status.upper(), -1)
-    if code == -1:
-        options = ['DISABLED', 'QUEUED', 'SENDING', 'SENT']
-        echo(u"status must be in {{ o|safe }}", o=str(options))
-        return
-
-    mail.status = code
-    mail.sent_at = timezone.now() if code == Mail.STATUS_SENT else None
+    mail.status = status
+    mail.sent_at = timezone.now() if status == Mail.STATUS_SENT else None
     mail.save()
 
 

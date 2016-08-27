@@ -108,7 +108,11 @@ class Recipient(RecipientContext, BaseModel, methods.Recipient):
     '''Recipients for a Mail
     '''
     key = models.CharField(
-        _('Recipient Key'), help_text=_('Recipient Key'),
+        _('Recipient Key'), help_text=_('Recipient Key Help'),
+        max_length=100, unique=True, db_index=True)
+
+    message_id = models.CharField(
+        _('Message ID'), help_text=_('Message ID Help'),
         max_length=100, unique=True, db_index=True)
 
     sender = models.ForeignKey(
@@ -118,9 +122,6 @@ class Recipient(RecipientContext, BaseModel, methods.Recipient):
     to = models.ForeignKey(
         Address, verbose_name=_('Recipient Address'),
         help_text=_('Recipient Address Help'))
-
-    message_id = models.CharField(
-        _('Message ID'), max_length=100, null=True, db_index=True)
 
     sent_at = models.DateTimeField(
         _('Sent At to Reipient'), help_text=_('Sent At to Recipient Help'),
