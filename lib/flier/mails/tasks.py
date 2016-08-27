@@ -101,7 +101,6 @@ def send_mail(mail, withbreak=True):
     logger.warn(_("send_mail:Sending sender:{} recipeints:{}").format(
         sender.address, recipients.count()))
 
-    recipients = recipients[:1]         # DEBUG
     for recipient in recipients:
 
         # INTERUPTED:

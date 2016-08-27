@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.utils import translation
 from django.conf import settings
+from django.core import serializers
 import djclick as click
 from flier.utils import echo
-from flier import validators
+from flier import validators, models
 from logging import getLogger
 
 logger = getLogger('flier')
@@ -47,3 +48,13 @@ def validate_email(ctx, addrs):
     for a in addrs:
         echo(u"{{check.0}} : {{check.1}}",
              check=validators.validate_email.check(a))
+
+
+@main.command()
+@click.option('--message_id', '-m')
+@click.option('--limit', '-l', default=20)
+@click.pass_context
+def recipients(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.Recipient.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))

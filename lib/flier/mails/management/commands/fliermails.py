@@ -83,4 +83,4 @@ def recipients(ctx, id, address):
         return
 
     echo(serializers.serialize(
-        'json', mail.recipients.filter(to__address__in=address)))
+         'json', mail.recipients.filter(to__address__in=address)))
