@@ -1,6 +1,8 @@
+# coding: utf-8
 from __future__ import absolute_import
 from django.utils.timezone import now, get_current_timezone
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
 
 from flier.models import Recipient
 from flier.mails import (models, utils)
@@ -77,17 +79,15 @@ def send_mail(mail, withbreak=True):
     if mail.status == mail.STATUS_DISABLED:
         # Already completed
         logger.warn(u"{0} sent_at:{1} status:{2} subject:{3}".format(
-            u"This mail is not in sending queue.",
-            mail.sent_at, mail.get_status_display(), mail.subject,
-        ))
+            _("send_mail:This mail is not in sending queue."),
+            mail.sent_at, mail.get_status_display(), mail.subject,))
         return
 
     if mail.sent_at:
         # Already completed
         logger.warn(u"{0} sent_at:{1} status:{2} subject:{3}".format(
-            u"This message has been already processed",
-            mail.sent_at, mail.get_status_display(), mail.subject,
-        ))
+            _("send_mail:This message has been already processed"),
+            mail.sent_at, mail.get_status_display(), mail.subject,))
         return
 
     # BEGIN:
@@ -98,14 +98,14 @@ def send_mail(mail, withbreak=True):
 
     sender = mail.sender.instance            # Actual Sender
     recipients = mail.active_recipients()    # Recipient list
-    logger.debug(u"sender:{} recipeints:{}".format(
+    logger.warn(_("send_mail:Sending sender:{} recipeints:{}").format(
         sender.address, recipients.count()))
 
     for recipient in recipients:
 
         # INTERUPTED:
         if withbreak and mail.delay():    # make this Mail pending state
-            logger.info("Mail({0}) is delayed".format(mail.id))
+            logger.info(_("send_mail:Mail({0}) is delayed").format(mail.id))
 
             # enqueue the other task for sending this Mail
             if job:
@@ -118,8 +118,8 @@ def send_mail(mail, withbreak=True):
         # Get latest Mail.status
         mail.refresh_from_db()
         if mail.status != mail.STATUS_SENDING:
-            logger.warn(u"Sending Mail({0}) has been interrupted".format(
-                mail.id))
+            msg = ("send_mail:Sending Mail({0}) has been interrupted")
+            logger.warn(msg.format(mail.id))
             return
 
         # Send mail to each recipient
