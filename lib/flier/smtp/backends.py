@@ -3,16 +3,24 @@ from django.core.mail.message import sanitize_address
 from django.utils.encoding import force_bytes
 from flier.backends import BackendSignal
 import smtplib
+import traceback
 
 
 class SmtpBackend(smtp.EmailBackend, BackendSignal):
 
-    def _send(self, message):
-        res = super(SmtpBackend, self)._send(message)
-        self.create_send_status(message)
-        return res
+    def _send(self, email_message):
+        try:
+            res = super(SmtpBackend, self)._send(email_message)
+            self.create_send_status(email_message)
+            return res
+        except:
+            self.create_send_status(
+                email_message,
+                status='smtp not send',
+                message=traceback.format_exc())
 
-    def create_send_status(self, email_message):
+    def create_send_status(
+            self, email_message, status='smtp send', message=''):
         from_email = sanitize_address(
             email_message.extra_headers.get('From'),
             email_message.encoding)
@@ -22,10 +30,10 @@ class SmtpBackend(smtp.EmailBackend, BackendSignal):
         for to in recipients:
             self.sent_signal.send(
                 sender=self.__class__,
+                key=email_message.from_email,       # Envelope From for bounces
                 from_email=from_email, to=to,
                 message_id=email_message.extra_headers.get('Message-ID'),
-                status='smtp send',
-                key=email_message.from_email, message='')
+                status=status, message=message)
 
     def send_raw_message(self, from_email, to_email, message_string):
         try:

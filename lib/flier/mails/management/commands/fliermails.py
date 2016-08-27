@@ -29,6 +29,7 @@ def ls_mails(ctx, queueing):
 {{ mail.get_status_display }}\t\
 {{ mail.subject }}\t\
 to={{ mail.recipients.count}}\t\
+active={{ mail.active_recipients.count}}\t\
 {{ mail.due_at|default:'' }}",     # NOQA
              mail=mail, opt=mail.instance._meta)
 

@@ -9,11 +9,10 @@ from flier.backends import BackendSignal
 from celery import shared_task
 # from celery.utils.log import get_task_logger
 
-import logging
+import traceback
+from logging import getLogger
 
-logger = logging.getLogger('flier.mails')
-# logger = get_task_logger('flier.mails')
-# import traceback
+logger = getLogger('flier.mails')
 
 
 def make_eta(when=None):
@@ -138,11 +137,22 @@ def send_mail(mail, withbreak=True):
 def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
             status='sent', message='', **kwargs):
 
-    Recipient.objects.filter(message_id=message_id).update(
-        key=key,
-        sent_at=now(),
-        status=status,
-        message=message)
+    recipient = Recipient.objects.filter(message_id=message_id).first()
+    if not recipient:
+        logger.error(u"Recpient for message-id({}) does not exists".format(
+            message_id))
+
+    try:
+        recipient.key = key
+        recipient.sent_at = now()
+        recipient.status = status
+        recipient.message = message
+        recipient.save()
+    except:
+        recipient.status = 'post send error'
+        recipient.sent_at = now()
+        recipient.message = message + "\n" + traceback.format_exc()
+        recipient.save()
 
 
 @receiver(BackendSignal.failed_signal)
