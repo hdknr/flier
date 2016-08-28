@@ -35,6 +35,7 @@ def ls_mails(ctx, queueing, id):
 {{ mail.subject }}\t\
 to={{ mail.recipients.count}}\t\
 active={{ mail.active_recipients.count}}\t\
+task={{ mail.task_id }}\t\
 {{ mail.due_at|default:'' }}",     # NOQA
              mail=mail, opt=mail.instance._meta)
 
@@ -45,6 +46,18 @@ active={{ mail.active_recipients.count}}\t\
 def send_mail(ctx, id):
     '''Send a Mail specified by id '''
     Mail.objects.get(id=id).send()
+
+
+@main.command()
+@click.option('--run', '-r', is_flag=True)
+@click.pass_context
+def enqueue(ctx, run):
+    ''' check queuable Mail, and enqueue them if `--run` is specified '''
+    mails = Mail.objects.queueing_set()
+    for m in mails:
+        if run:
+            m.enqueue()
+        echo("{{m.id}}: {{m.subject}}:task {{m.task_id}}",  m=m)
 
 
 @main.command()

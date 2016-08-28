@@ -5,7 +5,7 @@ from datetime import timedelta
 from flier.methods import BaseMethod
 
 from logging import getLogger
-logger = getLogger()
+logger = getLogger('flier')
 
 
 class MailTemplate(object):

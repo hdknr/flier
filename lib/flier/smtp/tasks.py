@@ -13,7 +13,7 @@ import time
 from flier.models import Recipient
 from . import models
 
-logger = get_task_logger(__name__)
+logger = get_task_logger('flier')
 
 
 @shared_task

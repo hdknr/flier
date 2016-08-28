@@ -10,7 +10,7 @@ import os
 from . import utils
 import time
 from logging import getLogger
-logger = getLogger()
+logger = getLogger('flier')
 
 
 DEFAULTS = dict(

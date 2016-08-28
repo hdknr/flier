@@ -1,11 +1,13 @@
 from django.core.mail.backends import smtp
 from django.core.mail.message import sanitize_address
 from django.utils.encoding import force_bytes
+from django.utils.translation import ugettext as _
+
 from flier.backends import BackendSignal
 import smtplib
 import traceback
 from logging import getLogger
-logger = getLogger()
+logger = getLogger('flier')
 
 
 class SmtpBackend(smtp.EmailBackend, BackendSignal):

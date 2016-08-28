@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from django.utils.timezone import now, get_current_timezone
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from flier.models import Recipient
 from flier.mails import (models, utils)
@@ -14,7 +14,7 @@ from celery import shared_task
 import traceback
 from logging import getLogger
 
-logger = getLogger('flier.mails')
+logger = getLogger('flier')
 
 
 def make_eta(when=None):
@@ -54,10 +54,14 @@ def get_return_path_and_to(sender, mail, recipient):
 @shared_task
 def enqueue_mails():
     '''Enqueue mails '''
-    for mail in models.Mail.objects.queueing_set():
+    mails = models.Mail.objects.queueing_set()
+    for mail in mails:
         mail.enqueue()
         logger.info(u'{0} has been enqueued task_id={1}'.format(
             mail.id, mail.task_id))
+
+    logger.info(
+        u'enqueue_mails:{0} mails has been enqueued .'.format(mails.count()))
 
 
 @shared_task
@@ -78,9 +82,9 @@ def send_mail(mail, withbreak=True):
 
     if mail.status == mail.STATUS_DISABLED:
         # Already completed
-        logger.warn(u"{0} sent_at:{1} status:{2} subject:{3}".format(
+        logger.warn(u"{} sent_at:{} status:{} subject:{}".format(
             _("send_mail:This mail is not in sending queue."),
-            mail.sent_at, mail.get_status_display(), mail.subject,))
+            mail.sent_at, mail.get_status_display(), mail.subject))
         return
 
     if mail.sent_at:
@@ -119,7 +123,7 @@ def send_mail(mail, withbreak=True):
         mail.refresh_from_db()
         if mail.status != mail.STATUS_SENDING:
             logger.warn(
-                _("send_mail:Mail({}) has been interrupted status:{}").format(
+                _("send_mail:Mail<{}> has been interrupted status:{}").format(
                     mail.id, mail.get_status_display()))
             return
 
@@ -131,6 +135,8 @@ def send_mail(mail, withbreak=True):
         sender.wait()
 
     # END: completed sending
+    logger.warn(
+        _("send_mail: completed for Mail({})").format(mail.id,))
     mail.complete()
 
 
