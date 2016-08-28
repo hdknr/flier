@@ -2,24 +2,10 @@ from django.utils.timezone import now, localtime
 from django import template
 from celery.task.control import revoke
 from datetime import timedelta
-import time
 from flier.methods import BaseMethod
 
-import logging
-logger = logging.getLogger('flier.mails')
-
-
-class Service(object):
-    def __init__(self, *args, **kwargs):
-        super(Service, self).__init__(*args, **kwargs)
-        self._every = 0
-
-    def wait(self):
-        self._every = self._every + 1
-        if self.wait_every < self._every:
-            self._every = 0
-            if self.wait_every > 0:
-                time.sleep(self.wait_ms / 1000.0)
+from logging import getLogger
+logger = getLogger()
 
 
 class MailTemplate(object):

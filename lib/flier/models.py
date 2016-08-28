@@ -45,6 +45,11 @@ class Sender(BaseModel, methods.Sender):
         help_text=_('Wait milliseconds help'),
         default=0)
 
+    wait_loadaverage = models.FloatField(
+        _('Wait Load Average'),
+        help_text=_('Wait Load Average Help'),
+        default=methods.DEFAULTS['LOADAVERAGE_MAX'])
+
     enabled = models.BooleanField(_('Enabled Sender'), default=True)
 
     class Meta:

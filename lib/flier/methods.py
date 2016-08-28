@@ -6,8 +6,17 @@ from django.db.models.fields.related import OneToOneRel
 from email.header import Header
 from email.utils import formataddr
 from .validators import validate_email
+import os
 from . import utils
 import time
+from logging import getLogger
+logger = getLogger()
+
+
+DEFAULTS = dict(
+    LOADAVERAGE_MAX=1.0,
+    LOADAVERAGE_WAIT=1000.0,
+)
 
 
 class BaseModel(object):
@@ -44,16 +53,34 @@ class BaseMethod(object):
 
 
 class Sender(BaseMethod):
+
     def __init__(self, *args, **kwargs):
         super(Sender, self).__init__(*args, **kwargs)
         self._every = 0
 
+    def sleep(self, ms=None):
+        ms = ms or self.wait_ms / 1000.0
+        time.sleep(ms)
+        self.refresh_from_db()      # re-read settings
+
     def wait(self):
         self._every = self._every + 1
-        if self.wait_every < self._every:
+
+        la1, la5, la15 = os.getloadavg()
+        if la1 >= self.wait_loadaverage:
+            self._every = 0
+            logger.warn(
+                'Sender{}: wait {}msec: Load {} > {}'.format(
+                    self.id, self.wait_ms, self.wait_loadaverage, la1))
+            self.sleep()
+
+        elif self.wait_every < self._every:
             self._every = 0
             if self.wait_every > 0:
-                time.sleep(self.wait_ms / 1000.0)
+                logger.warn(
+                    'Sender{}: waits for each {} sending: {}msec'.format(
+                        self.id, self.wait_every, self.wait_ms))
+                self.sleep()
 
     @property
     def domain(self):

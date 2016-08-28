@@ -47,6 +47,21 @@ def send_mail(ctx, id):
     Mail.objects.get(id=id).send()
 
 
+@main.command()
+@click.argument('id')
+@click.pass_context
+def prepare_sending(ctx, id):
+    '''Send a Mail specified by id '''
+    mail = Mail.objects.filter(id=id).first()
+    if not mail:
+        echo('No Mail for id={{ id }}', id=id)
+        return
+    if mail.status == 'sending':
+        echo('This mail is being processed.')
+        return
+    mail.instance.prepare_sending()
+
+
 @main.command(
     help="change Mail status :[{}]".format(
         '|'.join(i[0] for i in Mail.STATUS)))
