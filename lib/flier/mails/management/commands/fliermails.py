@@ -107,5 +107,7 @@ def recipients(ctx, id, address):
         echo(u"No mail for {{ id }}", id=id)
         return
 
-    echo(serializers.serialize(
-         'json', mail.recipients.filter(to__address__in=address)))
+    qs = address and mail.recipients.filter(to__address__in=address) \
+        or mail.recipients.filter()
+
+    echo(serializers.serialize('json', qs))
