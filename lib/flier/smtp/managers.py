@@ -3,6 +3,9 @@
 from django.db import models
 from email.utils import parseaddr
 from email import message_from_file
+from logging import getLogger
+import traceback
+logger = getLogger('flier')
 
 
 class DomainQuerySet(models.QuerySet):
@@ -62,11 +65,18 @@ class MessageQuerySet(models.QuerySet):
             :param email.message.Message obj:
         '''
 
-        _, from_address = parseaddr(obj['Return-Path'])
-        _, to_address = parseaddr(obj['Delivered-To'])
-        doms = self.model._meta.get_field('domain').related_model
-        domain = doms.objects.filter(domain=to_address.split('@')[1]).first()
-        return self.create(
-            domain=domain, sender=from_address, recipient=to_address,
-            original_recipient=to_address, raw_message=obj.as_string(),
-            **kwargs)
+        try:
+            _, from_address = parseaddr(
+                obj['Return-Path'] or obj['From'])
+            _, to_address = parseaddr(
+                obj['Delivered-To'] or obj['To'])
+
+            doms = self.model._meta.get_field('domain').related_model
+            domain = doms.objects.filter(
+                domain=to_address.split('@')[1]).first()
+            return self.create(
+                domain=domain, sender=from_address, recipient=to_address,
+                original_recipient=to_address, raw_message=obj.as_string(),
+                **kwargs)
+        except:
+            logger.error(traceback.format_exc())

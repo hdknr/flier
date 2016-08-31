@@ -91,31 +91,59 @@ def process_drop_mail(path, *args, **kwargs):
         return -1
 
     msg = message_from_file(open(path))
-    to = msg['Delivered-To']
+    to = msg['Delivered-To'] or msg['To']
     logger.debug("processing:{} {}".format(to, path))
 
     # Bounced Back
-    recipient = Recipient.objects.filter(key=to).first()
-    if recipient:
-        recipient.bounce(
-            status='smtp bounce', message=msg.as_string())
+    if process_bounced_back(msg, to):
         return 1
 
     # Forwarding
-    forwarder = models.Forwarder.objects.filter(address=to).first()
-    if forwarder:
-        forwarder.forward_message(
-            models.Message.objects.from_mailobject(msg, status='forwarding'))
+    if process_forwarding(msg, to):
         return 2
 
     # Forwarding Bounced
-    original = models.Message.objects.filter(relay_from=to).first()
-    if original:
-        original.bounce_back(
-            models.Message.objects.from_mailobject(
-                msg, status='bounced forward'))
+    if process_forwarding_bounced(msg, to):
         return 3
 
     # Save message just in case
+    if process_save(msg, to):
+        return 4
+    return 5
+
+
+def process_bounced_back(msg, to):
+    if msg and to:
+        recipient = Recipient.objects.filter(key=to).first()
+        if recipient:
+            recipient.bounce(
+                status='smtp bounce', message=msg.as_string())
+            return True
+    return False
+
+
+def process_forwarding(msg, to):
+    if msg and to:
+        forwarder = models.Forwarder.objects.filter(address=to).first()
+        if forwarder:
+            forwarder.forward_message(
+                models.Message.objects.from_mailobject(
+                    msg, status='forwarding'))
+            return True
+    return False
+
+
+def process_forwarding_bounced(msg, to):
+    if msg and to:
+        original = models.Message.objects.filter(relay_from=to).first()
+        if original:
+            original.bounce_back(
+                models.Message.objects.from_mailobject(
+                    msg, status='bounced forward'))
+            return True
+    return False
+
+
+def process_save(msg, to):
     models.Message.objects.from_mailobject(msg, status='no reason')
-    return 4
+    return True
