@@ -18,11 +18,39 @@ def main(ctx):
 
 
 @main.command()
+@click.option('--id', '-i')
+@click.option('--limit', '-l', default=20)
 @click.pass_context
-def ls_sender(ctx):
-    from flier.models import Sender
-    for sender in Sender.objects.all():
-        echo(u"{{ sender.id }} {{ sender }}", sender=sender)
+def senders(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.Sender.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))
+
+
+@main.command()
+@click.option('--id', '-i')
+@click.option('--limit', '-l', default=20)
+@click.pass_context
+def status(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.RecipientStatus.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))
+
+
+@main.command()
+@click.option('--message_id', '-m')
+@click.option('--sender', '-s')
+@click.option('--status__code')
+@click.option('--status')
+@click.option('--key', '-k')
+@click.option('--content_type', '-c')
+@click.option('--object_id', '-o')
+@click.option('--limit', '-l', default=20)
+@click.pass_context
+def recipients(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.Recipient.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))
 
 
 @main.command()
@@ -48,16 +76,3 @@ def validate_email(ctx, addrs):
     for a in addrs:
         echo(u"{{check.0}} : {{check.1}}",
              check=validators.validate_email.check(a))
-
-
-@main.command()
-@click.option('--message_id', '-m')
-@click.option('--key', '-k')
-@click.option('--content_type', '-c')
-@click.option('--object_id', '-o')
-@click.option('--limit', '-l', default=20)
-@click.pass_context
-def recipients(ctx, limit, **kwargs):
-    q = dict((k, v) for k, v in kwargs.items() if v)
-    instances = models.Recipient.objects.filter(**q)[:limit]
-    echo(serializers.serialize('json', instances))

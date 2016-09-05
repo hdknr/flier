@@ -36,11 +36,13 @@ Ubuntu:
 '''
 from django.utils import translation
 from django.conf import settings
+from django.core import serializers
 
 import djclick as click
 import sys
 from flier.utils import echo
 from flier.smtp.tasks import save_inbound
+from flier.smtp import models
 from logging import getLogger
 
 logger = getLogger('flier')
@@ -54,12 +56,23 @@ def main(ctx):
 
 
 @main.command()
+@click.option('--id', '-i')
+@click.option('--limit', '-l', default=20)
 @click.pass_context
-def ls_domain(ctx):
-    from flier.smtp.models import Domain
-    for domain in Domain.objects.all():
-        echo(u"{{ domain.id }} {{ domain.domain}} {{ domain.transport }}",
-             domain=domain)
+def ls_domain(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.Domain.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))
+
+
+@main.command()
+@click.option('--id', '-i')
+@click.option('--limit', '-l', default=20)
+@click.pass_context
+def ls_sender(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.Sender.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))
 
 
 @main.command()
