@@ -3,10 +3,10 @@ from django.utils.timezone import now
 
 
 class RecipientStatusQuerySet(models.QuerySet):
-    def get_status(self, code):
+    def get_status(self, code, label=None):
         status, created = self.get_or_create(code=code)
         if created:
-            status.label = code
+            status.label = label or code
             status.save()
         return status
 
