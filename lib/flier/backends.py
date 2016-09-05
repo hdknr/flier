@@ -1,7 +1,7 @@
 from django.dispatch import dispatcher
 
 
-SignalArgs = ['from_email', 'to', 'message_id', 'key', 'status', 'message']
+SignalArgs = ['from_email', 'to', 'message_id', 'key', 'status_code', 'message']
 
 
 class BackendSignal(object):

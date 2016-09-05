@@ -94,6 +94,31 @@ class Address(BaseModel, methods.Address):
         super(Address, self).save(*args, **kwargs)
 
 
+class RecipientStatus(models.Model):
+    code = models.CharField(
+        _('Recipient Status Code'),
+        help_text=_('Recipient Status Code Help'),
+        max_length=50, unique=True, db_index=True)
+
+    label = models.CharField(
+        _('Recipient Status Label'),
+        help_text=_('Recipient Status Label Help'),
+        max_length=100, null=True, blank=True, default=None)
+
+    description = models.TextField(
+        _('Recipient Status Description'),
+        null=True, default=None, blank=True)
+
+    class Meta:
+        verbose_name = _('Recipient Status')
+        verbose_name_plural = _('Recipient Status')
+
+    objects = managers.RecipientStatusQuerySet.as_manager()
+
+    def __unicode__(self):
+        return self.label or self.code
+
+
 class RecipientContext(models.Model):
     content_type = models.ForeignKey(
         ContentType, verbose_name=_('Recipient Context'),
@@ -128,11 +153,15 @@ class Recipient(RecipientContext, BaseModel, methods.Recipient):
         Address, verbose_name=_('Recipient Address'),
         help_text=_('Recipient Address Help'))
 
+    status = models.ForeignKey(
+        RecipientStatus, verbose_name=_('Recipient Status'),
+        help_text=_('Recipient Status Help'),
+        null=True, default=None, blank=True, on_delete=models.SET_NULL)
+
     sent_at = models.DateTimeField(
         _('Sent At to Reipient'), help_text=_('Sent At to Recipient Help'),
         null=True, blank=True, default=None)
 
-    status = models.CharField(_('Recipient Status'), max_length=50)
     message = models.TextField(
         _('Recipient Message'), null=True, default=None, blank=True)
 

@@ -4,7 +4,7 @@ from django.utils.timezone import now, get_current_timezone
 from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 
-from flier.models import Recipient
+from flier.models import Recipient, RecipientStatus
 from flier.mails import (models, utils)
 from flier.backends import BackendSignal
 
@@ -142,7 +142,7 @@ def send_mail(mail, withbreak=True):
 
 @receiver(BackendSignal.sent_signal)
 def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
-            status='sent', message='', **kwargs):
+            status_code='sent', message='', **kwargs):
 
     recipient = Recipient.objects.filter(message_id=message_id).first()
     if not recipient:
@@ -153,11 +153,12 @@ def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
     try:
         recipient.key = key
         recipient.sent_at = now()
-        recipient.status = status
+        recipient.status = RecipientStatus.objects.get_status(status_code)
         recipient.message = message
         recipient.save()
     except:
-        recipient.status = 'post send error'
+        status_code = 'post send error'
+        recipient.status = RecipientStatus.objects.get_status(status_code)
         recipient.sent_at = now()
         recipient.message = message + "\n" + traceback.format_exc()
         recipient.save()
@@ -165,9 +166,9 @@ def on_sent(sender=None, from_email=None, to=None, message_id=None, key=None,
 
 @receiver(BackendSignal.failed_signal)
 def on_failed(sender=None, from_email=None, to=None, message_id=None, key=None,
-              status='sent', message='', **kwargs):
+              status_code='sent', message='', **kwargs):
     Recipient.objects.filter(message_id=message_id).update(
         key=key,
         sent_at=now(),
-        status=status,
+        status=RecipientStatus.objects.get_status(status_code),
         message=message)

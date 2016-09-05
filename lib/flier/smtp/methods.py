@@ -171,7 +171,7 @@ class Message(object):
 
         if self.bounced_recipient:
             self.bounced_recipient.bounce(
-                status='smtp bounce',
+                status_code='smtp bounce',
                 message=self.raw_message)
             return
 

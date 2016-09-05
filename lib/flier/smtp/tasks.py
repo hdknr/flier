@@ -117,7 +117,7 @@ def process_bounced_back(msg, to):
         recipient = Recipient.objects.filter(key=to).first()
         if recipient:
             recipient.bounce(
-                status='smtp bounce', message=msg.as_string())
+                status_code='smtp bounce', message=msg.as_string())
             return True
     return False
 

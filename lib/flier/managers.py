@@ -2,6 +2,15 @@ from django.db import models
 from django.utils.timezone import now
 
 
+class RecipientStatusQuerySet(models.QuerySet):
+    def get_status(self, code):
+        status, created = self.get_or_create(code=code)
+        if created:
+            status.label = code
+            status.save()
+        return status
+
+
 class RecipientQuerySet(models.QuerySet):
     def send_status(self, sender, to, message_id, key,
                     status='Sent', message=''):

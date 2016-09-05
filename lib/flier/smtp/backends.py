@@ -20,11 +20,11 @@ class SmtpBackend(smtp.EmailBackend, BackendSignal):
         except:
             self.create_send_status(
                 email_message,
-                status='smtp not send',
+                status_code='smtp not send',
                 message=traceback.format_exc())
 
     def create_send_status(
-            self, email_message, status='smtp send', message=''):
+            self, email_message, status_code='smtp send', message=''):
         from_email = sanitize_address(
             email_message.extra_headers.get('From'),
             email_message.encoding)
@@ -37,7 +37,7 @@ class SmtpBackend(smtp.EmailBackend, BackendSignal):
                 key=email_message.from_email,       # Envelope From for bounces
                 from_email=from_email, to=to,
                 message_id=email_message.extra_headers.get('Message-ID'),
-                status=status, message=message)
+                status_code=status_code, message=message)
 
     def send_raw_message(self, from_email, to_email, message_string):
         try:

@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from django.dispatch import receiver
 
-from flier.models import BaseMessage, Recipient, Address
+from flier.models import BaseMessage, Recipient, Address, RecipientStatus
 from flier.ses import models
 # from celery.utils.log import get_task_logger
 
@@ -28,7 +28,8 @@ def bounce(instance, *args, **kwargs):
         to, _ = Address.objects.get_or_create(address=r.emailAddress)
         recipient, _ = Recipient.objects.get_or_create(
             sender=sender, key=msg.mail.messageId, to=to)
-        recipient.status = "{0} {1}".format(r.action, r.status)
+        status_code = "{0} {1}".format(r.action, r.status)
+        recipient.status = RecipientStatus.objects.get_status(status_code)
         recipient.message = msg.format()
         recipient.save()
         to.bounce()
@@ -45,8 +46,9 @@ def complaint(instance, *args, **kwargs):
         to, _ = Address.objects.get_or_create(address=r.emailAddress)
         recipient, _ = Recipient.objects.get_or_create(
             sender=sender, key=msg.mail.messageId, to=to)
-        recipient.status = "complaint {0}".format(
+        status_code = "complaint {0}".format(
             msg.complaint.complaintFeedbackType)
+        recipient.status = RecipientStatus.objects.get_status(status_code)
         recipient.message = msg.format()
         recipient.save()
         to.bounce()

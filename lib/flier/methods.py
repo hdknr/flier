@@ -143,9 +143,9 @@ class Recipient(object):
             bcc=bcc, attachments=attachments, headers=headers,
             cc=cc, reply_to=reply_to, *args, **kwargs)
 
-    def bounce(self, status, message):
-        # TODO send signal to subclass instance
-        self.status = status
+    def bounce(self, status_code, message):
+        from .models import RecipientStatus
+        self.status = RecipientStatus.objects.get_status(status_code)
         self.message = message
         self.save()
         self.to.bounce()

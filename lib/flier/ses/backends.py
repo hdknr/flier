@@ -47,7 +47,7 @@ class SesBackend(base.BaseEmailBackend, BackendSignal):
                 sender=self.__class__,
                 from_email=sender, to=destinations, message_id=message_id,
                 key=res.SendRawEmailResult.MessageId,
-                status='SendRawEmailResponse', message=res.format())
+                status_code='SendRawEmailResponse', message=res.format())
         except Exception, ex:
             self.failed_signal.send(
                 sender=self.__class__,

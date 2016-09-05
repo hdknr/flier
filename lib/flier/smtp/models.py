@@ -25,6 +25,9 @@ class Domain(BaseModel, methods.Domain):
         related_name='alias_domain_set',
         null=True, default=None, blank=True, on_delete=models.SET_NULL)
 
+    description = models.TextField(
+        _('Domain Description'), null=True, default=None, blank=True)
+
     class Meta:
         verbose_name = _('Domain')
         verbose_name_plural = _('Domain')
