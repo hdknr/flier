@@ -101,7 +101,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 ###
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 TIME_ZONE = 'Asia/Tokyo'
 LANGUAGE_CODE = 'ja'
 INSTALLED_APPS += (
@@ -112,8 +112,12 @@ INSTALLED_APPS += (
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.mysql',
     'HOST': 'localhost',
-    'NAME': 'flier', 'USER': 'flier', 'PASSWORD': 'flier',
+    'NAME': 'flier_sample', 'USER': 'flier_sample', 'PASSWORD': 'flier_sample',
+    'OPTIONS': {
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    },
 }
+
 import loggings
 LOGGING = loggings.LOGGING
 
@@ -130,9 +134,5 @@ except:
 try:
     from local_settings import *    # noqa
     # local_settings.RAVEN_CONFIG is required
-    INSTALLED_APPS += (
-        'raven.contrib.django.raven_compat',
-    )
 except:
-    print "eeerr"
     pass

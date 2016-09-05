@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from flier import models as flier_models
-from flier.mails import (
-    models as mails_models, methods as mails_methods)
+from flier.mails import models as mails_models
 
 # Create your models here.
 
@@ -30,35 +29,11 @@ class Alumnus(models.Model):
 
     @property
     def to(self):
-        to, _ = flier_models.Address.objects.get_or_create(address=self.address)
+        to, _ = flier_models.Address.objects.get_or_create(
+            address=self.address)
         return to
 
 
 class Letter(mails_models.Mail):
     reunion = models.ForeignKey(Reunion)
-
-    def add_all(self):
-        for a in self.reunion.alumnus_set.all():
-            self.letterrecipient_set.get_or_create(
-                key=self.reunion.sender.instance.verp(),
-                to=a.to, alumnus=a, sender=self.reunion.sender)
-
-    def excluded_alumni(self):
-        '''
-        - included LetterRecipient list : self.letterrecipient_set.all()
-        '''
-        return self.reunion.alumnus_set.exclude(letterrecipient__letter=self)
-
-
-class LetterRecipient(flier_models.Recipient, mails_methods.Recipient):
-    mail = models.ForeignKey(Letter)
-    alumnus = models.ForeignKey(Alumnus)
-
-
-class AdminLetter(mails_models.Mail):
-    reunion = models.ForeignKey(Reunion)
-
-
-class AdminLetterRecipient(flier_models.Recipient, mails_methods.Recipient):
-    mail = models.ForeignKey(AdminLetter)
-    alumnus = models.ForeignKey(Alumnus)
+    alumni = models.ManyToManyField(Alumnus)

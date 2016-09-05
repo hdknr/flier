@@ -1,3 +1,6 @@
+'''
+gunicorn -c gunicorn.py  app.wsgi:application
+'''
 import os
 import sys
 
