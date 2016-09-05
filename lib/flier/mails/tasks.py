@@ -110,12 +110,9 @@ def send_mail(mail, withbreak=True):
         # INTERUPTED:
         if withbreak and mail.delay():    # make this Mail pending state
             logger.info(_("send_mail:Mail({0}) is delayed").format(mail.id))
-
             # enqueue the other task for sending this Mail
             if job:
-                send_mail.apply_async(
-                    args=[mail.id], eta=make_eta(mail.due_at))
-
+                mail.enqueue()
             # terminate this task
             return
 
