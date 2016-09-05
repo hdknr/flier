@@ -19,7 +19,7 @@ class DomainQuerySet(models.QuerySet):
         return obj
 
 
-class SenderQuerySet(models.QuerySet):
+class SmtpSenderQuerySet(models.QuerySet):
     def for_address(self, address, name=None):
         dom_field = self.model._meta.get_field('domain')
         dom = dom_field.related_model.objects.for_address(address)

@@ -63,15 +63,15 @@ class Alias(BaseModel, methods.Domain):
         return u"{0}>{1}".format(self.recipient, self.forward)
 
 
-class Sender(BaseSender, methods.Sender):
+class SmtpSender(BaseSender, methods.SmtpSender):
     domain = models.ForeignKey(
         Domain, verbose_name=_('Sender Domain'), max_length=50)
 
     class Meta:
-        verbose_name = _('Sender')
-        verbose_name_plural = _('Sender')
+        verbose_name = _('SMTP Sender')
+        verbose_name_plural = _('SMTP Sender')
 
-    objects = managers.SenderQuerySet.as_manager()
+    objects = managers.SmtpSenderQuerySet.as_manager()
 
     def __unicode__(self):
         return u"smtp:{0}".format(self.address)

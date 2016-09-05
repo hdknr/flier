@@ -46,7 +46,7 @@ class Alias(object):
     pass
 
 
-class Sender(object):
+class SmtpSender(object):
     def verp(self):
         return uuid.uuid1().hex + "." + self.address
 

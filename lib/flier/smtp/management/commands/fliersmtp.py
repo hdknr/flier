@@ -59,7 +59,7 @@ def main(ctx):
 @click.option('--id', '-i')
 @click.option('--limit', '-l', default=20)
 @click.pass_context
-def ls_domain(ctx, limit, **kwargs):
+def domains(ctx, limit, **kwargs):
     q = dict((k, v) for k, v in kwargs.items() if v)
     instances = models.Domain.objects.filter(**q)[:limit]
     echo(serializers.serialize('json', instances))
@@ -69,9 +69,9 @@ def ls_domain(ctx, limit, **kwargs):
 @click.option('--id', '-i')
 @click.option('--limit', '-l', default=20)
 @click.pass_context
-def ls_sender(ctx, limit, **kwargs):
+def senders(ctx, limit, **kwargs):
     q = dict((k, v) for k, v in kwargs.items() if v)
-    instances = models.Sender.objects.filter(**q)[:limit]
+    instances = models.SmtpSender.objects.filter(**q)[:limit]
     echo(serializers.serialize('json', instances))
 
 

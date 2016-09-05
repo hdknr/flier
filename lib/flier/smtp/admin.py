@@ -36,7 +36,7 @@ class DomainAdmin(admin.ModelAdmin):
     list_filter = ('domain', 'transport', )
 
 
-class SenderAdmin(admin.ModelAdmin):
+class SmtpSenderAdmin(admin.ModelAdmin):
     list_filter = ('enabled', 'domain', )
 
 register(__name__, globals())
