@@ -10,12 +10,12 @@ from enum import Enum
 
 import boto.ses
 import requests
-import aws
+from . import aws
 import backends
 
 import traceback
-import logging
-logger = logging.getLogger('flier.ses')
+from logging import getLogger
+logger = getLogger('flier')
 
 
 class BaseObjectSerializer(json.JSONEncoder):
@@ -79,8 +79,24 @@ class Service(object):
         return getattr(self, '_conn', _cache())
 
     def verify_email_address(self, email):
-        res = self.connection.verify_email_address(email)
-        return res
+        '''
+        Verifies an email address.
+        This action causes a confirmation email message
+        to be sent to the specified address.
+        '''
+        addresses = self.list_verified_email_addresses()
+        if email not in addresses:
+            res = self.connection.verify_email_address(email)
+            return res
+
+    def list_verified_email_addresses(self):
+        '''
+        A ListVerifiedEmailAddressesResponse structure.
+        Note that keys must be unicode strings.
+        '''
+        data = self.connection.list_verified_email_addresses()
+        res = aws.ListVerifiedEmailAddressesResponse(data)
+        return res.addresses
 
 
 class Source(object):
