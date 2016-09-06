@@ -107,12 +107,14 @@ class Source(object):
                 destinations=addr_to,
             )
 
-    def verify_address(self, address):
+    def verify_address(self, address=None):
         '''
         http://boto.readthedocs.org/en/latest/ses_tut.html
         #verifying-a-sender-email-address
         '''
-        self.connection.verify_email_address(address)
+        address = address or self.address
+        if address:
+            self.connection.verify_email_address(address)
 
     def set_notification(self):
         '''

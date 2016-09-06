@@ -22,6 +22,16 @@ def main(ctx):
 @click.option('--id', '-i')
 @click.option('--limit', '-l', default=20)
 @click.pass_context
+def services(ctx, limit, **kwargs):
+    q = dict((k, v) for k, v in kwargs.items() if v)
+    instances = models.Service.objects.filter(**q)[:limit]
+    echo(serializers.serialize('json', instances))
+
+
+@main.command()
+@click.option('--id', '-i')
+@click.option('--limit', '-l', default=20)
+@click.pass_context
 def sources(ctx, limit, **kwargs):
     q = dict((k, v) for k, v in kwargs.items() if v)
     instances = models.Source.objects.filter(**q)[:limit]
