@@ -52,4 +52,5 @@ class SesBackend(base.BaseEmailBackend, BackendSignal):
             self.failed_signal.send(
                 sender=self.__class__,
                 from_email=sender, to=destinations, message_id=message_id,
+                key=message_id,             # no key given
                 status=ex.__class__.__name__, message=ex.message)

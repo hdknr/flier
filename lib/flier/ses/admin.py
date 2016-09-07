@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django import template
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 from flier.admin import register
+from .models import Source
 import json
 import models
 
@@ -11,10 +13,26 @@ class TopicAdminInline(admin.TabularInline):
     max_num = 3
 
 
+class SourceAdminForm(forms.ModelForm):
+    force_verify = forms.BooleanField(
+        label=_('Verify Email Address'), required=False)
+
+    class Meta:
+        model = Source
+        exclude = []
+
+
 class SourceAdmin(admin.ModelAdmin):
     list_excludes = ('created_at', )
     list_filter = ('service', )
     inlines = [TopicAdminInline, ]
+    form = SourceAdminForm
+
+    def save_model(self, request, obj, form, change):
+        super(SourceAdmin, self).save_model(
+            request, obj, form, change)
+        if form.cleaned_data.get('force_verify', False):
+            form.instance.verify_address()
 
 
 class NotificationAdmin(admin.ModelAdmin):

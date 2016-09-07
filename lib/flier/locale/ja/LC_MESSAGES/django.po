@@ -382,7 +382,7 @@ msgstr "SESリージョン"
 
 #: ses/models.py:16
 msgid "SES Region Help"
-msgstr "SESリージョン"
+msgstr "<a target=\"_pop\" href=\"http://docs.aws.amazon.com/ses/latest/DeveloperGuide/regions.html\">Regions and Amazon SES</a>"
 
 #: ses/models.py:20
 msgid "SES Access Key"

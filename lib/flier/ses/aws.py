@@ -240,3 +240,18 @@ class SendRawEmailResponse(SendEmailResponse):
             return self._SendRawEmailResult
 
         return getattr(self, '_SendRawEmailResult', _cache(self))
+
+
+class ListVerifiedEmailAddressesResponse(BaseMessage):
+
+    def __init__(self, data):
+        super(ListVerifiedEmailAddressesResponse, self).__init__(data)
+        self.data = self.ListVerifiedEmailAddressesResponse
+
+    @property
+    def result(self):
+        return self.ListVerifiedEmailAddressesResult
+
+    @property
+    def addresses(self):
+        return self.result['VerifiedEmailAddresses']
