@@ -23,9 +23,9 @@ class SmtpSenderQuerySet(models.QuerySet):
     def for_address(self, address, name=None):
         dom_field = self.model._meta.get_field('domain')
         dom = dom_field.related_model.objects.for_address(address)
-        sender = dom.sender_set.filter(address=address).first()
+        sender = dom.smtpsender_set.filter(address=address).first()
         if not sender:
-            sender = dom.sender_set.create(
+            sender = dom.smtpsender_set.create(
                 address=address, name=name or address)
         return sender
 
