@@ -34,16 +34,21 @@ class SmtpSenderQuerySet(models.QuerySet):
 
 
 class ForwarderQuerySet(models.QuerySet):
-    def update_or_create(self, domain, address, forward):
+    def update_or_create(self, address, forward, domain=None):
         '''
         :param str address:
         :param Address forward:
         '''
+        from .models import Domain
+        from flier.models import Address
         obj = self.filter(address=address).first()
+        if isinstance(forward, basestring):
+            forward, created = Address.objects.get_or_create(address=forward)
         if not obj:
+            domain = domain or Domain.objects.for_address(address)
             return self.create(
                 domain=domain, address=address, forward=forward)
-        if obj.forward != forward:
+        if obj.forward != forward and forward:
             obj.forward = forward
             obj.save()
         return obj
