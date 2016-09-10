@@ -27,6 +27,9 @@ class SmtpSenderQuerySet(models.QuerySet):
         if not sender:
             sender = dom.smtpsender_set.create(
                 address=address, name=name or address)
+        if sender.name != name and name:
+            sender.name = name
+            sender.save()
         return sender
 
 
