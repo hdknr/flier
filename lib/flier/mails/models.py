@@ -3,6 +3,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.models import ContentType
+
 
 from flier.models import (
     BaseModel, Sender, Recipient as BaseRecipient)
@@ -131,3 +133,12 @@ class Attachment(BaseModel, methods.Attachment):
     class Meta:
         verbose_name = _('Attachment')
         verbose_name_plural = _('Attachment')
+
+
+class Notification(MailTemplate, methods.Notification):
+    content_type = models.OneToOneField(ContentType)
+    to = models.EmailField()
+
+    class Meta:
+        verbose_name = _('Notification Mail')
+        verbose_name_plural = _('Notification Mail')

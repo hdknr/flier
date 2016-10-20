@@ -23,6 +23,22 @@ class MailTemplate(object):
             return template.Template(self.instance.html).render(
                 template.Context(kwargs))
 
+    def build_message(self, recipient, **ctx):
+        message = recipient.create_message(
+            self.render_subject(to=recipient, **ctx),
+            self.render_body(to=recipient, **ctx))
+        if self.html:
+            message.attach_alternative(
+                self.rendered_html(to=recipient, **ctx), "text/html")
+
+        return message
+
+    def send_to(self, *address, **ctx):
+        for addr in address:
+            recipient = self.sender.create_recipient(addr)
+            msg = self.build_message(recipient, **ctx)
+            msg.send()
+
 
 class BaseMail(BaseMethod):
 
@@ -182,3 +198,9 @@ class Attachment(object):
     '''Attachemetns for a Mail
     '''
     pass
+
+
+class Notification(object):
+    def notify(self, instance, *address, **ctx):
+        ctx['instance'] = instance
+        self.send_to(self.to, *address, **ctx)
