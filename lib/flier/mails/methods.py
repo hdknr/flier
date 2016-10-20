@@ -15,16 +15,13 @@ class MailTemplate(object):
             template.Context(kwargs))
 
     def render_body(self, **kwargs):
-        return template.Template(self.instance.text).render(
+        return template.Template(self.instance.body).render(
             template.Context(kwargs))
 
-    def create_mail(self, **kwargs):
-        return self.mail_set.create(
-            subject=self.subject,
-            body=self.body,
-            html=self.html,
-            **kwargs
-        )
+    def render_html(self, **kwargs):
+        if self.instance.html:
+            return template.Template(self.instance.html).render(
+                template.Context(kwargs))
 
 
 class BaseMail(BaseMethod):
