@@ -35,7 +35,7 @@ class MailTemplate(object):
 
     def send_to(self, *address, **ctx):
         for addr in address:
-            recipient = self.sender.create_recipient(addr)
+            recipient = self.sender.instance.create_recipient(addr)
             msg = self.build_message(recipient, **ctx)
             msg.send()
 
