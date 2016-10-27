@@ -71,3 +71,16 @@ def create_topic(ctx, id):
     source = models.Source.objects.get(id=id)
     source.create_topic('Bounce')
     source.create_topic('Complaint')
+
+
+@main.command()
+@click.argument('id')
+@click.argument('to')
+@click.argument('subject')
+@click.argument('message')
+@click.pass_context
+def sendmail(ctx, id, to, subject, message):
+    source = models.Source.objects.get(id=id)
+    recipient = source.create_recipient(to)
+    message = recipient.create_message(subject, message)
+    message.send()
