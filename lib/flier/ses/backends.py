@@ -26,8 +26,11 @@ class SesBackend(base.BaseEmailBackend, BackendSignal):
         '''
         - http://bit.ly/flier_ses_sendrawemail
         '''
-        # TODO: exception handling
+        from .models import Source
         sender = message.from_email
+        if not self.connection:
+            self.connection = Source.objects.filter(
+                address=sender).first().connection
 
         for to in message.recipients():
             self._send_single(message,  sender, to)
