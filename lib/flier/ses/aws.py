@@ -4,8 +4,10 @@ from Crypto.PublicKey import RSA
 from Crypto.Hash import SHA
 from Crypto.Util.asn1 import DerSequence
 from Crypto.Signature import PKCS1_v1_5
-
+from boto import ses, sns
 from base64 import b64decode, standard_b64decode
+from logging import getLogger
+logger = getLogger()
 
 
 # http://docs.aws.amazon.com/sns/latest/dg/
@@ -21,6 +23,24 @@ NOTIFICATION_SIGNING_INPUT_KEY = [
     "TopicArn",
     "Type",
 ]
+
+
+def get_ses_regions(name=None):
+    res = ses.regions()
+    if name:
+        res = [
+            ri for ri in res
+            if ri.name == name]
+    return res
+
+
+def get_sns_regions(name=None):
+    res = sns.regions()
+    if name:
+        res = [
+            ri for ri in res
+            if ri.name == name]
+    return res
 
 
 def NOTIFICATION_SIGNING_INPUT(jobj):
@@ -53,6 +73,22 @@ def verify_pycrypto(pem, signing_input, b64signature):
     dig = SHA.new(signing_input)
 
     return verifier.verify(dig, sig)
+
+
+def create_ses_notification(
+        sns_conn, ses_conn, topic_name, endpoint, identity, notification):
+    topic_obj = sns_conn.create_topic(topic_name)
+    logger.debug(topic_obj)
+
+    arn = topic_obj.get(
+        'CreateTopicResponse', {}).get(
+            'CreateTopicResult', {}).get('TopicArn', None)
+    if arn:
+        result = sns_conn.subscribe(arn, 'http', endpoint)
+        result = ses_conn.set_identity_notification_topic(
+            identity, notification, arn)
+        logger.debug(result)
+        return arn
 
 
 class BaseMessage(object):
@@ -89,7 +125,7 @@ class SnsMessage(BaseMessage):
 
         return getattr(self, '_Message', _cache(self))
 
-    def confirm_subscribe_url(self, jobj):
+    def confirm_subscribe_url(self):
         return requests.get(self.SubscribeURL)
 
     @property

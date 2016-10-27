@@ -3,11 +3,9 @@ from django.dispatch import receiver
 
 from flier.models import BaseMessage, Recipient, Address, RecipientStatus
 from flier.ses import models
-# from celery.utils.log import get_task_logger
-
 from logging import getLogger
 
-logger = getLogger('flier.ses')
+logger = getLogger()
 
 
 @receiver(BaseMessage.confirm_signal, sender=models.Notification)

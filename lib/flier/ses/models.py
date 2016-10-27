@@ -2,8 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from flier.models import BaseModel, BaseMessage, Sender
-import managers
-import methods
+from . import methods, defs,  managers
 
 
 class Service(BaseModel, methods.Service):
@@ -54,26 +53,9 @@ class Source(Sender, methods.Source):
         return u"ses:{0}".format(self.address)
 
 
-class Topic(BaseModel):
-    BOUNCE = 0
-    COMPLAINT = 1
-    DELIVERY = 2
-
-    NOTIFICATION_TYPES = ['Bounce', 'Complaint', 'Delivery']
-
+class Topic(defs.Topic):
     source = models.ForeignKey(
         Source, null=True, blank=True, default=None, )
-
-    topic = models.IntegerField(
-        _('Topic'), choices=(
-            (BOUNCE, _('Bounce Topic')),
-            (COMPLAINT, _('Complaint Topic')),
-            (DELIVERY, _('Delivery Topic')),), default=BOUNCE)
-
-    arn = models.CharField(
-        _('Topic Arn'),
-        help_text=_('Topic Arn Help'),
-        max_length=100, null=True, default=None, blank=True)
 
     class Meta:
         verbose_name = _('SNS Topic')

@@ -17,6 +17,9 @@ class SourceAdminForm(forms.ModelForm):
     force_verify = forms.BooleanField(
         label=_('Verify Email Address'), required=False)
 
+    force_create_topics = forms.BooleanField(
+        label=_('Create Topics(Bounce & Complaint)'), required=False)
+
     class Meta:
         model = Source
         exclude = []
@@ -31,14 +34,20 @@ class SourceAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super(SourceAdmin, self).save_model(
             request, obj, form, change)
+
         if form.cleaned_data.get('force_verify', False):
             form.instance.verify_address()
+
+        if form.cleaned_data.get('force_create_topics', False):
+            form.instance.create_topic('Bounce')
+            form.instance.create_topic('Complaint')
 
 
 class NotificationAdmin(admin.ModelAdmin):
     list_excludes = ('created_at', 'headers', )
     list_filter = ('topic', )
     readonly_fields = ('sns_json', 'ses_json', 'headers_json', )
+    date_hierarchy = 'created_at'
 
     def sns_json(self, obj):
         return template.Template('''

@@ -4,13 +4,15 @@ AWS SES
 - http://boto.readthedocs.org/en/latest/ref/ses.html
 '''
 from django.core.mail.message import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 import json
 from datetime import datetime
 from enum import Enum
 
 import boto.ses
 import requests
-from . import aws
+from . import aws, defs
 import backends
 
 import traceback
@@ -49,7 +51,7 @@ class Service(object):
     @property
     def regions(self):
         def _cache():
-            self._regions = boto.ses.regions()
+            self._regions = aws.get_ses_regions()
             return self._regions
 
         return getattr(self, '_regions', _cache())
@@ -77,6 +79,18 @@ class Service(object):
             return self._conn
 
         return getattr(self, '_conn', _cache())
+
+    @property
+    def sns_connection(self):
+        def _cache():
+            regions = aws.get_sns_regions(self.region)
+            self._conn_sns = boto.connect_sns(
+                aws_access_key_id=self.key,
+                aws_secret_access_key=self.secret,
+                region=regions[0])
+            return self._conn_sns
+
+        return getattr(self, '_conn_sns', _cache())
 
     def verify_email_address(self, email):
         '''
@@ -152,6 +166,24 @@ class Source(object):
                 connection=self.backend,            # IMPORTANT: SesBackend
                 *args, **kwargs
             )
+
+    def create_topic(self, notification, site=None, scheme='http'):
+        site = site or Site.objects.first()
+        if notification in defs.Topic.NOTIFICATION_TYPES:
+            topic = defs.Topic.NOTIFICATION_TYPES.index(notification)
+            topic_name = u"{}-{}-topic".format(
+                self.service.name, notification)
+            endpoint = u"{}://{}{}".format(
+                scheme, site.domain,
+                reverse('flierses_notify',
+                        kwargs={'topic': notification}))
+            arn = aws.create_ses_notification(
+                self.service.sns_connection,
+                self.service.connection,
+                topic_name, endpoint, self.address, notification)
+
+            if not self.topic_set.filter(topic=topic).update(arn=arn):
+                self.topic_set.create(topic=topic, arn=arn)
 
 
 class Notification(object):

@@ -62,3 +62,12 @@ def verify_address(ctx, id, address):
     '''
     source = models.Source.objects.get(id=id)
     echo(json.dumps(source.verify_address(address)))
+
+
+@main.command()
+@click.argument('id')
+@click.pass_context
+def create_topic(ctx, id):
+    source = models.Source.objects.get(id=id)
+    source.create_topic('Bounce')
+    source.create_topic('Complaint')
