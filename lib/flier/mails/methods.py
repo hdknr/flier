@@ -29,7 +29,7 @@ class MailTemplate(object):
             self.render_body(to=recipient, **ctx))
         if self.html:
             message.attach_alternative(
-                self.rendered_html(to=recipient, **ctx), "text/html")
+                self.render_html(to=recipient, **ctx), "text/html")
 
         return message
 
