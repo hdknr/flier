@@ -24,4 +24,8 @@ class MailAdmin(admin.ModelAdmin):
     instance_link.short_description = _('Concret Instance')
 
 
+class MailTemplateAdmin(admin.ModelAdmin):
+    list_excludes = ('body', 'html', )
+
+
 register(__name__, globals())
