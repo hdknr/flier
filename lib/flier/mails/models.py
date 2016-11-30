@@ -35,6 +35,9 @@ class MailTemplate(BaseMail, methods.MailTemplate):
     name = models.CharField(
         _('Mail Name'), help_text=_('Mail Name Help'),  max_length=200,
         unique=True, db_index=True)
+    bcc = models.EmailField(
+        _('Bcc To'), help_text=_('Bcc To Help'),
+        null=True, blank=True, default=None)
 
     class Meta:
         verbose_name = _('Mail Template')

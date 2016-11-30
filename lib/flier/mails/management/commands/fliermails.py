@@ -5,7 +5,7 @@ from django.core import serializers
 
 import djclick as click
 from flier.utils import echo
-from flier.mails.models import Mail
+from flier.mails.models import Mail, MailTemplate
 from logging import getLogger
 
 logger = getLogger('flier')
@@ -111,3 +111,12 @@ def recipients(ctx, id, address):
         or mail.recipients.filter()
 
     echo(serializers.serialize('json', qs))
+
+
+@main.command()
+@click.argument('template_id')
+@click.argument('address', nargs=-1)
+@click.pass_context
+def send_by_template(ctx, template_id, address):
+    templ = MailTemplate.objects.get(id=template_id)
+    templ.send_to(*address)

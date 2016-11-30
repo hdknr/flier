@@ -23,19 +23,24 @@ class MailTemplate(object):
             return template.Template(self.instance.html).render(
                 template.Context(kwargs))
 
-    def build_message(self, recipient, **ctx):
+    def build_message(self, recipient, bcc=(), **ctx):
+        bcc = bcc or tuple(self.bcc and self.bcc.split(','))
         message = recipient.create_message(
             self.render_subject(to=recipient, **ctx),
-            self.render_body(to=recipient, **ctx))
+            self.render_body(to=recipient, **ctx),
+            bcc=bcc)
         if self.html:
             message.attach_alternative(
                 self.render_html(to=recipient, **ctx), "text/html")
 
         return message
 
+    def create_recipient(self, addr):
+        return self.sender.instance.create_recipient(addr)
+
     def send_to(self, *address, **ctx):
         for addr in address:
-            recipient = self.sender.instance.create_recipient(addr)
+            recipient = self.create_recipient(addr)
             msg = self.build_message(recipient, **ctx)
             msg.send()
 
