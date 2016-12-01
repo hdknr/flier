@@ -24,7 +24,7 @@ class MailTemplate(object):
                 template.Context(kwargs))
 
     def build_message(self, recipient, bcc=(), **ctx):
-        bcc = bcc or tuple(self.bcc and self.bcc.split(','))
+        bcc = bcc or tuple(self.bcc and self.bcc.split(',') or [])
         message = recipient.create_message(
             self.render_subject(to=recipient, **ctx),
             self.render_body(to=recipient, **ctx),
