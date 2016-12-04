@@ -32,7 +32,8 @@ class SesBackend(base.BaseEmailBackend, BackendSignal):
             self.connection = Source.objects.filter(
                 address=sender).first().connection
 
-        for to in message.recipients():
+        recipients = message.recipients()
+        for to in recipients:
             self._send_single(message,  sender, to)
 
         return True

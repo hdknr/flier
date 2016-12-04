@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-28 06:18+0000\n"
+"POT-Creation-Date: 2016-11-30 08:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,178 +30,190 @@ msgstr "受信者"
 msgid "Flier"
 msgstr "Flier"
 
-#: mails/admin.py:27
+#: mails/admin.py:24
 msgid "Concret Instance"
 msgstr "実際のインスタンス"
-
-#: mails/admin.py:52
-msgid "Send Message"
-msgstr "送信"
 
 #: mails/apps.py:9
 msgid "Flier Mails"
 msgstr "メール"
 
-#: mails/models.py:16
+#: mails/models.py:18
 msgid "Mail Sender"
 msgstr "送信者"
 
-#: mails/models.py:16
+#: mails/models.py:18
 msgid "Mail Sender Help"
 msgstr "送信者"
 
-#: mails/models.py:19
+#: mails/models.py:21
 msgid "Mail Subject"
 msgstr "表題"
 
-#: mails/models.py:19
+#: mails/models.py:21
 msgid "Mail Subject Help"
 msgstr "表題"
 
-#: mails/models.py:22
+#: mails/models.py:24
 msgid "Mail Body"
 msgstr "本文"
 
-#: mails/models.py:22
+#: mails/models.py:24
 msgid "Mail Body Help"
 msgstr "本文"
 
-#: mails/models.py:25
+#: mails/models.py:27
 msgid "Mail HTML Body"
 msgstr "本文HTML"
 
-#: mails/models.py:25
+#: mails/models.py:27
 msgid "Mail HTML Body Help"
 msgstr "本文HTML"
 
-#: mails/models.py:34
+#: mails/models.py:36
 msgid "Mail Name"
 msgstr "名称"
 
-#: mails/models.py:34
+#: mails/models.py:36
 msgid "Mail Name Help"
 msgstr "名称"
 
-#: mails/models.py:38 mails/models.py:39
+#: mails/models.py:39
+msgid "Bcc To"
+msgstr "Bcc先"
+
+#: mails/models.py:39
+msgid "Bcc To Help"
+msgstr "Amazone SESなどBccがつかない場合こちらに直接送信します。"
+
+#: mails/models.py:43 mails/models.py:44
 msgid "Mail Template"
 msgstr "メールテンプレート"
 
-#: mails/models.py:52
+#: mails/models.py:57
 msgid "Disabled Mail"
 msgstr "未送信"
 
-#: mails/models.py:53
+#: mails/models.py:58
 msgid "Queued Mail"
 msgstr "送信準備"
 
-#: mails/models.py:54
+#: mails/models.py:59
 msgid "Sending Mail"
 msgstr "送信中"
 
-#: mails/models.py:55
+#: mails/models.py:60
 msgid "Sent Mail"
 msgstr "送信済み"
 
-#: mails/models.py:59
+#: mails/models.py:64
 msgid "Mail Status"
 msgstr "状態"
 
-#: mails/models.py:59
+#: mails/models.py:64
 msgid "Mail Status Help"
 msgstr "状態"
 
-#: mails/models.py:63
+#: mails/models.py:68
 msgid "Due At"
 msgstr "送信予定日時"
 
-#: mails/models.py:67
+#: mails/models.py:72
 msgid "Sent At"
 msgstr "送信実行日時"
 
-#: mails/models.py:67
+#: mails/models.py:72
 msgid "Sent At Help"
 msgstr "送信実行日時に記録があれば処理が完了していることになります。"
 
-#: mails/models.py:71
+#: mails/models.py:76
 msgid "Sleep From"
 msgstr "休止時刻"
 
-#: mails/models.py:71
+#: mails/models.py:76
 msgid "Sleep From Help"
 msgstr "休止時刻"
 
-#: mails/models.py:75
+#: mails/models.py:80
 msgid "Sleep To"
 msgstr "再開"
 
-#: mails/models.py:75
+#: mails/models.py:80
 msgid "Sleep To Help"
 msgstr "再開"
 
-#: mails/models.py:79 mails/models.py:113
+#: mails/models.py:84 mails/models.py:118
 msgid "Task ID"
 msgstr "タスクID"
 
-#: mails/models.py:79 mails/models.py:113
+#: mails/models.py:84 mails/models.py:118
 msgid "Task ID Help"
 msgstr "バックグラウンドジョブの番号です"
 
-#: mails/models.py:94
+#: mails/models.py:99
 msgid "Context Data"
 msgstr "設定"
 
-#: mails/models.py:94
+#: mails/models.py:99
 msgid "Context Data Help"
 msgstr "設定"
 
-#: mails/models.py:101 mails/models.py:102 mails/models.py:138
+#: mails/models.py:106 mails/models.py:107 mails/models.py:130
 msgid "Mail"
 msgstr "メール"
 
-#: mails/models.py:117 mails/models.py:118
+#: mails/models.py:122 mails/models.py:123
 msgid "Mail Cancel"
 msgstr "取り消し"
 
-#: mails/models.py:125 mails/models.py:126
-msgid "Mail Recipient"
-msgstr "受信者"
-
-#: mails/models.py:138
+#: mails/models.py:130
 msgid "Mail Help"
 msgstr "受信者"
 
-#: mails/models.py:141
+#: mails/models.py:133
 msgid "Attachment File"
 msgstr "添付"
 
-#: mails/models.py:142
+#: mails/models.py:134
 msgid "Attrachment File Help"
 msgstr "添付"
 
-#: mails/models.py:145 mails/models.py:146
+#: mails/models.py:137 mails/models.py:138
 msgid "Attachment"
 msgstr "添付"
 
-#: mails/tasks.py:82
+#: mails/models.py:146 mails/models.py:147
+#, fuzzy
+#| msgid "Notification"
+msgid "Notification Mail"
+msgstr "通知"
+
+#: mails/tasks.py:86
 msgid "send_mail:This mail is not in sending queue."
 msgstr "send_mail:このメールは送信状態にありません"
 
-#: mails/tasks.py:89
+#: mails/tasks.py:93
 msgid "send_mail:This message has been already processed"
 msgstr "send_mail:このメールは処理済みです"
 
-#: mails/tasks.py:101
+#: mails/tasks.py:105
 msgid "send_mail:Sending sender:{} recipeints:{}"
 msgstr "send_mail:送信します sender:{} recipeints:{}"
 
-#: mails/tasks.py:108
+#: mails/tasks.py:112
 #, python-brace-format
 msgid "send_mail:Mail({0}) is delayed"
 msgstr "send_mail:メール ({0}) の送信を遅延させてのちに再開します"
 
-#: mails/tasks.py:122
-msgid "send_mail:Mail({}) has been interrupted status:{}"
+#: mails/tasks.py:123
+#, fuzzy
+#| msgid "send_mail:Mail({}) has been interrupted status:{}"
+msgid "send_mail:Mail<{}> has been interrupted status:{}"
 msgstr "send_mail:メール ({0}) が中止されています: 状態={}"
+
+#: mails/tasks.py:136
+msgid "send_mail: completed for Mail({})"
+msgstr ""
 
 #: models.py:14
 msgid "Created At"
@@ -251,8 +263,7 @@ msgstr "１通送信後にこの閾値を超えていると送信待ちします
 msgid "Enabled Sender"
 msgstr "有効な送信者"
 
-#: models.py:56 models.py:57 smtp/models.py:68 smtp/models.py:69
-#: smtp/models.py:173
+#: models.py:56 models.py:57 smtp/models.py:176
 msgid "Sender"
 msgstr "送信者"
 
@@ -293,74 +304,120 @@ msgid "Mail Address"
 msgstr "アドレス"
 
 #: models.py:99
-msgid "Recipient Context"
-msgstr "受信者コンテキスト"
+#, fuzzy
+#| msgid "Recipient Status"
+msgid "Recipient Status Code"
+msgstr "受信者状態"
 
-#: models.py:103
-msgid "Recipint Contenxt Instance"
-msgstr "受信者コンテキストオブジェクト"
+#: models.py:100
+#, fuzzy
+#| msgid "Recipient Status"
+msgid "Recipient Status Code Help"
+msgstr "受信者状態"
 
-#: models.py:116
-msgid "Recipient Key"
-msgstr "受信者キー"
+#: models.py:104
+#, fuzzy
+#| msgid "Recipient Status"
+msgid "Recipient Status Label"
+msgstr "受信者状態"
 
-#: models.py:116
-msgid "Recipient Key Help"
-msgstr "バウンス処理のためのキー(SMTP:Envelop From, SES:送信キーなど)"
+#: models.py:105
+#, fuzzy
+#| msgid "Recipient Status"
+msgid "Recipient Status Label Help"
+msgstr "受信者状態"
 
-#: models.py:120
-msgid "Message ID"
-msgstr "メッセージID"
+#: models.py:109
+#, fuzzy
+#| msgid "Recipient Status"
+msgid "Recipient Status Description"
+msgstr "受信者状態"
 
-#: models.py:120
-msgid "Message ID Help"
-msgstr "メールを識別します"
-
-#: models.py:124
-msgid "Message Sender"
-msgstr "送信者"
-
-#: models.py:125
-msgid "Message Sender Help"
-msgstr "送信者"
-
-#: models.py:128 smtp/models.py:48
-msgid "Recipient Address"
-msgstr "受信者アドレス"
-
-#: models.py:129
-msgid "Recipient Address Help"
-msgstr "受信者アドレス"
-
-#: models.py:132
-msgid "Sent At to Reipient"
-msgstr "送信日時"
-
-#: models.py:132
-msgid "Sent At to Recipient Help"
-msgstr "送信日時"
-
-#: models.py:135
+#: models.py:113 models.py:114 models.py:157
 msgid "Recipient Status"
 msgstr "受信者状態"
 
-#: models.py:137
+#: models.py:124
+msgid "Recipient Context"
+msgstr "受信者コンテキスト"
+
+#: models.py:128
+msgid "Recipint Contenxt Instance"
+msgstr "受信者コンテキストオブジェクト"
+
+#: models.py:141
+msgid "Recipient Key"
+msgstr "受信者キー"
+
+#: models.py:141
+msgid "Recipient Key Help"
+msgstr "バウンス処理のためのキー(SMTP:Envelop From, SES:送信キーなど)"
+
+#: models.py:145
+msgid "Message ID"
+msgstr "メッセージID"
+
+#: models.py:145
+msgid "Message ID Help"
+msgstr "メールを識別します"
+
+#: models.py:149
+msgid "Message Sender"
+msgstr "送信者"
+
+#: models.py:150
+msgid "Message Sender Help"
+msgstr "送信者"
+
+#: models.py:153 smtp/models.py:51
+msgid "Recipient Address"
+msgstr "受信者アドレス"
+
+#: models.py:154
+msgid "Recipient Address Help"
+msgstr "受信者アドレス"
+
+#: models.py:158
+#, fuzzy
+#| msgid "Recipient Status"
+msgid "Recipient Status Help"
+msgstr "受信者状態"
+
+#: models.py:162
+msgid "Sent At to Reipient"
+msgstr "送信日時"
+
+#: models.py:162
+msgid "Sent At to Recipient Help"
+msgstr "送信日時"
+
+#: models.py:166
 msgid "Recipient Message"
 msgstr "受信者メッセージ"
 
-#: models.py:140 models.py:141 smtp/models.py:177
+#: models.py:169 models.py:170 smtp/models.py:180
 msgid "Recipient"
 msgstr "受信者"
 
-#: ses/admin.py:32 ses/models.py:94
+#: ses/admin.py:18
+#, fuzzy
+#| msgid "Email Address"
+msgid "Verify Email Address"
+msgstr "アドレス"
+
+#: ses/admin.py:21
+msgid "Create Topics(Bounce & Complaint)"
+msgstr ""
+
+#: ses/admin.py:59 ses/models.py:76
 msgid "SNS Message"
 msgstr "SNS伝文"
 
-#: ses/admin.py:43 ses/models.py:97
+#: ses/admin.py:70 ses/models.py:79
 msgid "SNS Headers"
 msgstr "SNSヘッダー"
 
-#: ses/admin.py:53
+#: ses/admin.py:80
 msgid "SES Message"
 msgstr "SES伝文"
 
@@ -368,111 +425,113 @@ msgstr "SES伝文"
 msgid "Flier SES"
 msgstr "SES"
 
-#: ses/models.py:11
-msgid "Service Name"
-msgstr "サービス名"
-
-#: ses/models.py:12
-msgid "Service Name Help"
-msgstr "サービス名"
-
-#: ses/models.py:16
-msgid "SES Region"
-msgstr "SESリージョン"
-
-#: ses/models.py:16
-msgid "SES Region Help"
-msgstr "<a target=\"_pop\" href=\"http://docs.aws.amazon.com/ses/latest/DeveloperGuide/regions.html\">Regions and Amazon SES</a>"
-
-#: ses/models.py:20
-msgid "SES Access Key"
-msgstr "SESアクセスキー"
-
-#: ses/models.py:21
-msgid "SES Access Key Help"
-msgstr "SESアクセスキー"
-
-#: ses/models.py:25
-msgid "SES Access Secret"
-msgstr "SESシークレット"
-
-#: ses/models.py:26
-msgid "SES Access Secret Help"
-msgstr "SESアクセスシークレット"
-
-#: ses/models.py:30
-msgid "Settings"
-msgstr "設定"
-
-#: ses/models.py:33 ses/models.py:34
-msgid "SES Service"
-msgstr "SESサービス"
-
-#: ses/models.py:42
-msgid "Service"
-msgstr "サービス"
-
-#: ses/models.py:42
-msgid "Service Help"
-msgstr "サービス名"
-
-#: ses/models.py:46
-msgid "Source Identity Arn"
-msgstr "ソースID ARN"
-
-#: ses/models.py:46
-msgid "Source Identity Arn Help"
-msgstr "ソースID ARN"
-
-#: ses/models.py:50 ses/models.py:51
-msgid "SES Source"
-msgstr "SES送信者"
-
-#: ses/models.py:68
+#: ses/defs.py:15
 msgid "Topic"
 msgstr "トピック"
 
-#: ses/models.py:69
+#: ses/defs.py:16
 msgid "Bounce Topic"
 msgstr "バウンストピック"
 
-#: ses/models.py:70
+#: ses/defs.py:17
 msgid "Complaint Topic"
 msgstr "苦情トピック"
 
-#: ses/models.py:71
+#: ses/defs.py:18
 msgid "Delivery Topic"
 msgstr "送信トピック"
 
-#: ses/models.py:74
+#: ses/defs.py:21
 msgid "Topic Arn"
 msgstr "トピックArn"
 
-#: ses/models.py:75
+#: ses/defs.py:22
 msgid "Topic Arn Help"
 msgstr "トピックArn"
 
-#: ses/models.py:79 ses/models.py:80
+#: ses/models.py:10
+msgid "Service Name"
+msgstr "サービス名"
+
+#: ses/models.py:11
+msgid "Service Name Help"
+msgstr "サービス名"
+
+#: ses/models.py:15
+msgid "SES Region"
+msgstr "SESリージョン"
+
+#: ses/models.py:15
+msgid "SES Region Help"
+msgstr ""
+"<a target=\"_pop\" href=\"http://docs.aws.amazon.com/ses/latest/"
+"DeveloperGuide/regions.html\">Regions and Amazon SES</a>"
+
+#: ses/models.py:19
+msgid "SES Access Key"
+msgstr "SESアクセスキー"
+
+#: ses/models.py:20
+msgid "SES Access Key Help"
+msgstr "SESアクセスキー"
+
+#: ses/models.py:24
+msgid "SES Access Secret"
+msgstr "SESシークレット"
+
+#: ses/models.py:25
+msgid "SES Access Secret Help"
+msgstr "SESアクセスシークレット"
+
+#: ses/models.py:29
+msgid "Settings"
+msgstr "設定"
+
+#: ses/models.py:32 ses/models.py:33
+msgid "SES Service"
+msgstr "SESサービス"
+
+#: ses/models.py:41
+msgid "Service"
+msgstr "サービス"
+
+#: ses/models.py:41
+msgid "Service Help"
+msgstr "サービス名"
+
+#: ses/models.py:45
+msgid "Source Identity Arn"
+msgstr "ソースID ARN"
+
+#: ses/models.py:45
+msgid "Source Identity Arn Help"
+msgstr "ソースID ARN"
+
+#: ses/models.py:49 ses/models.py:50
+msgid "SES Source"
+msgstr "SES送信者"
+
+#: ses/models.py:61 ses/models.py:62
 msgid "SNS Topic"
 msgstr "SNSトピック"
 
-#: ses/models.py:97
+#: ses/models.py:79
 msgid "SNS Headers Help"
 msgstr "SNSヘッダー"
 
-#: ses/models.py:101 ses/models.py:102
+#: ses/models.py:83 ses/models.py:84
 msgid "Notification"
 msgstr "通知"
 
-#: ses/models.py:109
+#: ses/models.py:91
 msgid "Certificate URL"
 msgstr "証明書URL"
 
-#: ses/models.py:111
+#: ses/models.py:93
 msgid "Certificate"
 msgstr "証明書"
 
-#: ses/models.py:114 ses/models.py:115
+#: ses/models.py:96 ses/models.py:97
 msgid "SES Certificate"
 msgstr "SES証明書"
 
@@ -480,11 +539,11 @@ msgstr "SES証明書"
 msgid "Flier SMTP"
 msgstr "SMTP"
 
-#: smtp/backends.py:46
+#: smtp/backends.py:48
 msgid "SmtpBackend.send_raw_message:{}"
 msgstr ""
 
-#: smtp/models.py:16 smtp/models.py:29 smtp/models.py:30
+#: smtp/models.py:16 smtp/models.py:32 smtp/models.py:33
 msgid "Domain"
 msgstr "ドメイン"
 
@@ -496,135 +555,145 @@ msgstr "トランスポート"
 msgid "Alias Transport"
 msgstr "エイリアストランスポート"
 
-#: smtp/models.py:52 smtp/models.py:88
+#: smtp/models.py:29
+msgid "Domain Description"
+msgstr ""
+
+#: smtp/models.py:55 smtp/models.py:91
 msgid "Forward Address"
 msgstr "転送先アドレス"
 
-#: smtp/models.py:56 smtp/models.py:57
+#: smtp/models.py:59 smtp/models.py:60
 msgid "Alias"
 msgstr "エイリアス"
 
-#: smtp/models.py:65
+#: smtp/models.py:68
 msgid "Sender Domain"
 msgstr "送信者ドメイン"
 
-#: smtp/models.py:81
+#: smtp/models.py:71 smtp/models.py:72
+#, fuzzy
+#| msgid "Mail Sender"
+msgid "SMTP Sender"
+msgstr "送信者"
+
+#: smtp/models.py:84
 msgid "Sending Domain"
 msgstr "送信ドメイン"
 
-#: smtp/models.py:84
+#: smtp/models.py:87
 msgid "Forwarder Address"
 msgstr "フォワーダーアドレス"
 
-#: smtp/models.py:84
+#: smtp/models.py:87
 msgid "Forwarder Address Help"
 msgstr "フォワーダーアドレス"
 
-#: smtp/models.py:89
+#: smtp/models.py:92
 msgid "Forward Address Help"
 msgstr "転送先アドレス"
 
-#: smtp/models.py:93
+#: smtp/models.py:96
 msgid "Is Deleted"
 msgstr "削除済み"
 
-#: smtp/models.py:93
+#: smtp/models.py:96
 msgid "Is Deleted Help"
 msgstr "再利用させない。させるときには一旦削除するか強制的に変更する。"
 
-#: smtp/models.py:96
+#: smtp/models.py:99
 msgid "Forwarder Task"
 msgstr "フォワーダータスク"
 
-#: smtp/models.py:96
+#: smtp/models.py:99
 msgid "Forwarder Task Help"
 msgstr "フォワーダータスク"
 
-#: smtp/models.py:100
+#: smtp/models.py:103
 msgid "Black List Pattern"
 msgstr "ブラックリストパターン"
 
-#: smtp/models.py:101
+#: smtp/models.py:104
 msgid "Black List Pattern Help"
 msgstr "ブラックリストパターン"
 
-#: smtp/models.py:105 smtp/models.py:106
+#: smtp/models.py:108 smtp/models.py:109
 msgid "Forwarder"
 msgstr "フォワーダー"
 
-#: smtp/models.py:120
+#: smtp/models.py:123
 msgid "Original Recipient Forwarder"
 msgstr "オリジナル受信フォワーダー"
 
-#: smtp/models.py:121
+#: smtp/models.py:124
 msgid "Original Recipient Forwarder Help"
 msgstr "オリジナル受信フォワーダー"
 
-#: smtp/models.py:125
+#: smtp/models.py:128
 msgid "Original Sender Address"
 msgstr "オリジナル送信アドレス"
 
-#: smtp/models.py:126
+#: smtp/models.py:129
 msgid "Original Sender Address Help"
 msgstr "オリジナル送信者アドレス"
 
-#: smtp/models.py:129
+#: smtp/models.py:132
 msgid "Is Spammer"
 msgstr "スパマー"
 
-#: smtp/models.py:133 smtp/models.py:134
+#: smtp/models.py:136 smtp/models.py:137
 msgid "Relay"
 msgstr "リレー"
 
-#: smtp/models.py:146
+#: smtp/models.py:149
 msgid "Raw Message Text"
 msgstr "テキスト形式メール"
 
-#: smtp/models.py:146
+#: smtp/models.py:149
 msgid "Raw Message Text Help"
 msgstr "テキスト形式メール"
 
-#: smtp/models.py:155
+#: smtp/models.py:158
 msgid "Forwarding Relay"
 msgstr "フォワーディングリレー"
 
-#: smtp/models.py:159
+#: smtp/models.py:162
 msgid "Relay From"
 msgstr "リレー送信者アドレス"
 
-#: smtp/models.py:169
+#: smtp/models.py:172
 msgid "Recipient Domain"
 msgstr "受信ドメイン"
 
-#: smtp/models.py:173
+#: smtp/models.py:176
 msgid "Sender Help"
 msgstr "送信者"
 
-#: smtp/models.py:177
+#: smtp/models.py:180
 msgid "Recipient Help"
 msgstr "受信者"
 
-#: smtp/models.py:181
+#: smtp/models.py:184
 msgid "Original Recipient"
 msgstr "オリジナル受信者"
 
-#: smtp/models.py:182
+#: smtp/models.py:185
 msgid "Oringinal Recipient Help"
 msgstr "オリジナル受信者"
 
-#: smtp/models.py:186
+#: smtp/models.py:189
 msgid "Processed At"
 msgstr "処理日時"
 
-#: smtp/models.py:189
+#: smtp/models.py:192
 msgid "Message Status"
 msgstr "状態"
 
-#: smtp/models.py:193
+#: smtp/models.py:196
 msgid "Message Errors"
 msgstr "メッセージエラー"
 
-#: smtp/models.py:197 smtp/models.py:198
+#: smtp/models.py:200 smtp/models.py:201
 msgid "Message"
 msgstr "メッセージ"
 
@@ -643,6 +712,12 @@ msgstr "{}: ユーザー部が不正です。"
 #: validators.py:50
 msgid "{}:Wrong Domain Part"
 msgstr "{}: ドメイン名が不正です。"
+
+#~ msgid "Send Message"
+#~ msgstr "送信"
+
+#~ msgid "Mail Recipient"
+#~ msgstr "受信者"
 
 #~ msgid "Process a Message Object"
 #~ msgstr "受信メッセージ処理"
