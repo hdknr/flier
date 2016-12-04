@@ -5,6 +5,7 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from email import message_from_file
+from email.utils import parseaddr
 import traceback
 import glob
 import os
@@ -92,6 +93,7 @@ def process_drop_mail(path, *args, **kwargs):
 
     msg = message_from_file(open(path))
     to = msg['Delivered-To'] or msg['To']
+    to = to and parseaddr(to)[1]
     logger.debug("processing:{} {}".format(to, path))
 
     # Bounced Back
