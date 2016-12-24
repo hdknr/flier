@@ -26,12 +26,12 @@ class MailTemplate(object):
     def build_message(self, recipient, bcc=(), **ctx):
         bcc = bcc or tuple(self.bcc and self.bcc.split(',') or [])
         message = recipient.create_message(
-            self.render_subject(to=recipient, **ctx),
-            self.render_body(to=recipient, **ctx),
+            self.render_subject(to=recipient, mail=self, **ctx),
+            self.render_body(to=recipient, mail=self, **ctx),
             bcc=bcc)
         if self.html:
             message.attach_alternative(
-                self.render_html(to=recipient, **ctx), "text/html")
+                self.render_html(to=recipient, mail=self, **ctx), "text/html")
 
         return message
 
@@ -55,13 +55,13 @@ class BaseMail(BaseMethod):
     def rendered_message(self, mail_address, **kwargs):
         return template.Template(self.body).render(
             template.Context(dict(
-                kwargs, to=mail_address,
+                kwargs, to=mail_address, mail=self,
             )))
 
     def rendered_html(self, mail_address, **kwargs):
         return template.Template(self.html).render(
             template.Context(dict(
-                kwargs, to=mail_address,
+                kwargs, to=mail_address, mail=self,
             )))
 
     def create_message(self, recipient, **kwargs):
