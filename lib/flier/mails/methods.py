@@ -175,7 +175,7 @@ class Mail(object):
     def reset_status(self):
         self.cancel(save=False)
         self.instance.all_recipients().update(
-            sent_at=None, status='waiting', message='', )
+            sent_at=None, status=None, message='', )
         self.status = self.STATUS_DISABLED
         self.sent_at = None
         self.save()
