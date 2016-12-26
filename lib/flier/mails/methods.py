@@ -52,17 +52,13 @@ class BaseMail(BaseMethod):
         # TODO: SHOULD BE configurable
         return 'plain'
 
-    def rendered_message(self, mail_address, **kwargs):
+    def rendered_message(self, **kwargs):
         return template.Template(self.body).render(
-            template.Context(dict(
-                kwargs, to=mail_address, mail=self,
-            )))
+            template.Context(dict(kwargs, mail=self,)))
 
-    def rendered_html(self, mail_address, **kwargs):
+    def rendered_html(self, **kwargs):
         return template.Template(self.html).render(
-            template.Context(dict(
-                kwargs, to=mail_address, mail=self,
-            )))
+            template.Context(dict(kwargs, mail=self,)))
 
     def create_message(self, recipient, **kwargs):
         '''
@@ -70,11 +66,11 @@ class BaseMail(BaseMethod):
         '''
         message = recipient.create_message(
             subject=self.subject,
-            body=self.rendered_message(recipient.to),)
+            body=self.rendered_message(recipient=recipient),)
 
         if self.html:
             message.attach_alternative(
-                self.rendered_html(recipient.to), "text/html")
+                self.rendered_html(recipient=recipient), "text/html")
 
         return message
 

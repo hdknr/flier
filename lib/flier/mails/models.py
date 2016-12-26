@@ -102,6 +102,10 @@ class Mail(BaseMail, MailStatus, methods.Mail):
     recipients = GenericRelation(
         BaseRecipient, related_query_name='mails')
 
+    click_url = models.URLField(
+        _('Mail Click Url'), help_text=_('Mail Click Url Help'),
+        null=True, blank=True, default=None)
+
     class Meta:
         verbose_name = _('Mail')
         verbose_name_plural = _('Mail')
@@ -145,3 +149,19 @@ class Notification(MailTemplate, methods.Notification):
     class Meta:
         verbose_name = _('Notification Mail')
         verbose_name_plural = _('Notification Mail')
+
+
+class MailClick(BaseModel):
+    mail = models.ForeignKey(Mail)
+    recipient = models.ForeignKey(
+        BaseRecipient, null=True, blank=True, on_delete=models.SET_NULL)
+
+    ctx = models.TextField(
+        _('Mail Click Context'), help_text=_('Mail Click Context Help'),
+        default=None, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Mail Click')
+        verbose_name_plural = _('Mail Click')
+
+    objects = managers.MailClickQuerySet.as_manager()

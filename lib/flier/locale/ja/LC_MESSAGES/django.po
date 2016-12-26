@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-30 08:38+0000\n"
+"POT-Creation-Date: 2016-12-26 02:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -183,10 +183,20 @@ msgid "Attachment"
 msgstr "添付"
 
 #: mails/models.py:146 mails/models.py:147
-#, fuzzy
-#| msgid "Notification"
 msgid "Notification Mail"
-msgstr "通知"
+msgstr "通知メール"
+
+#: mails/models.py:156
+msgid "Mail Click Context"
+msgstr "クリックしたときの補足データ"
+
+#: mails/models.py:156
+msgid "Mail Click Context Help"
+msgstr "クリックしたときの補足データ"
+
+#: mails/models.py:160 mails/models.py:161
+msgid "Mail Click"
+msgstr "メールクリック"
 
 #: mails/tasks.py:86
 msgid "send_mail:This mail is not in sending queue."
