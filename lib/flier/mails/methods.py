@@ -1,5 +1,6 @@
 from django.utils.timezone import now, localtime
 from django import template
+from django.contrib.sites.models import Site
 from celery.task.control import revoke
 from datetime import timedelta
 from flier.methods import BaseMethod
@@ -25,6 +26,11 @@ class MailTemplate(object):
 
     def build_message(self, recipient, bcc=(), **ctx):
         bcc = bcc or tuple(self.bcc and self.bcc.split(',') or [])
+        if 'site' not in ctx:
+            try:
+                ctx['site'] = Site.objects.get_current()
+            except:
+                pass
         message = recipient.create_message(
             self.render_subject(to=recipient, mail=self, **ctx),
             self.render_body(to=recipient, mail=self, **ctx),
