@@ -28,4 +28,8 @@ class MailTemplateAdmin(admin.ModelAdmin):
     list_excludes = ('body', 'html', )
 
 
+class NotificationAdmin(admin.ModelAdmin):
+    raw_id_fields = ['sender', 'content_type', ]
+
+
 register(__name__, globals())
