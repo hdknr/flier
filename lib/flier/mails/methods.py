@@ -212,4 +212,5 @@ class Attachment(object):
 class Notification(object):
     def notify(self, instance, *address, **ctx):
         ctx['instance'] = instance
-        self.send_to(self.to, *address, **ctx)
+        address = address or (self.to, )
+        self.send_to(*address, **ctx)
