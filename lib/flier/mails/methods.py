@@ -41,12 +41,14 @@ class MailTemplate(object):
 
         return message
 
-    def create_recipient(self, addr):
-        return self.sender.instance.create_recipient(addr)
+    def create_recipient(self, addr, sender=None):
+        sender = sender or self.sender
+        return sender.instance.create_recipient(addr)
 
     def send_to(self, *address, **ctx):
+        sender = ctx.get('sender', None)
         for addr in address:
-            recipient = self.create_recipient(addr)
+            recipient = self.create_recipient(addr, sender=sender)
             msg = self.build_message(recipient, **ctx)
             msg.send()
 
