@@ -104,7 +104,8 @@ class Sender(BaseMethod):
 
     def to_addr(self):
         h = Header(self.name, 'utf8')
-        return formataddr((str(h), self.address))
+        h = str(h).replace('?=\n ', '')  # newline
+        return formataddr((h, self.address))
 
 
 class Address(object):
