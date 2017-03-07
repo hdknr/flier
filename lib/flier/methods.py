@@ -90,16 +90,27 @@ class Sender(BaseMethod):
         idstring = idstring or utils.get_random_string(8)
         return mail.make_msgid(idstring=idstring, domain=self.domain)
 
-    def create_recipient(self, address, message_id=None):
+    def create_recipient(
+            self, address, message_id=None, content_object=None):
         to_field = self.recipient_set.model._meta.get_field('to')
         to, _ = to_field.related_model.objects.get_or_create(address=address)
         message_id = message_id or self.create_messageid(
             idstring=unicode(to.id))
+
+        content_type, object_id = None, None
+        if content_object:
+            try:
+                content_type = ContentType.objects.get_for_model(content_object)
+                object_id = content_object.id
+            except:
+                pass
+
         recipient, _ = self.recipient_set.get_or_create(
             key=message_id,             # This key replaced by Sender
             message_id=message_id,
             to=to,
-        )
+            content_type=content_type, object_id=object_id,)
+
         return recipient
 
     def to_addr(self):
