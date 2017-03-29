@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 
 @deconstructible
 class EmailValidatorEx(EmailValidator):
-    user_regex = _lazy_re_compile(r"(^[a-zA-Z0-9_.+-]+)", re.IGNORECASE)
+    user_regex = _lazy_re_compile(r"(^[a-zA-Z0-9_.+-]+$)", re.IGNORECASE)
     domain_regex = _lazy_re_compile(
         r"([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
