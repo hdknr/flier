@@ -82,9 +82,10 @@ class MessageQuerySet(models.QuerySet):
             doms = self.model._meta.get_field('domain').related_model
             domain = doms.objects.filter(
                 domain=to_address.split('@')[1]).first()
+            raw_message = obj.as_string()
             return self.create(
                 domain=domain, sender=from_address, recipient=to_address,
-                original_recipient=to_address, raw_message=obj.as_string(),
+                original_recipient=to_address, raw_message=raw_message,
                 **kwargs)
         except:
             logger.error(traceback.format_exc())
