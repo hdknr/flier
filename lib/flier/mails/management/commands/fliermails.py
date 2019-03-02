@@ -42,10 +42,17 @@ task={{ mail.task_id }}\t\
 
 @main.command()
 @click.argument('id')
+@click.option('--force', '-f', is_flag=True)
 @click.pass_context
-def send_mail(ctx, id):
+def send_mail(ctx, id, force):
     '''Send a Mail specified by id '''
-    Mail.objects.get(id=id).send()
+    mail = Mail.objects.get(id=id)
+    if force:
+        mail.status = 'queued'
+        mail.sent_at = None
+        mail.save()
+        mail.recipients.all().delete()
+    mail.send()
 
 
 @main.command()

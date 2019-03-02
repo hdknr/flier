@@ -149,6 +149,7 @@ class Recipient(object):
         '''
         headers['Message-ID'] = self.message_id
         headers['From'] = self.sender.to_addr()
+
         return self.sender.instance.create_message(
             to=[self.to.address],
             subject=subject, body=body,
