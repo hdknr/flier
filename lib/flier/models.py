@@ -122,13 +122,25 @@ class RecipientStatus(models.Model):
 class RecipientContext(models.Model):
     content_type = models.ForeignKey(
         ContentType, verbose_name=_('Recipient Context'),
-        null=True, blank=True,)
+        null=True, blank=True, default=None)
 
     object_id = models.PositiveIntegerField(
         _('Recipint Contenxt Instance'),
-        null=True, blank=True)
+        null=True, blank=True, default=None)
 
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    target_content_type = models.ForeignKey(
+        ContentType, verbose_name=_('Target Context'),
+        related_name='targets',
+        null=True, blank=True, default=None)
+
+    target_object_id = models.PositiveIntegerField(
+        _('Target Instance'),
+        null=True, blank=True, default=None)
+
+    target_object = GenericForeignKey(
+        'target_content_type', 'target_object_id')
 
     class Meta:
         abstract = True

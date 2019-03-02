@@ -74,7 +74,7 @@ class Sender(BaseMethod):
                     self.id, self.wait_ms, self.wait_loadaverage, la1))
             self.sleep()
 
-        elif self.wait_every < self._every:
+        elif self.wait_every <= self._every:
             self._every = 0
             if self.wait_every > 0:
                 logger.warn(

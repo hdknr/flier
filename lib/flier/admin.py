@@ -67,8 +67,11 @@ class RecipientAdmin(admin.ModelAdmin):
     list_additionals = ('content_object', )
     date_hierarchy = 'sent_at'
     raw_id_fields = ('sender', 'to', )
-    readonly_fields = ('content_object', 'message_view', )
-    exclude = ['content_type', 'object_id', ]
+    readonly_fields = (
+        'content_object', 'target_object', 'message_view', )
+    exclude = [
+        'content_type', 'object_id',
+        'target_content_type', 'target_object_id', ]
     search_fields = ('to__address', 'key', 'sender__address', )
 
     def get_fieldsets(self, request, obj=None):
@@ -102,6 +105,21 @@ class RecipientAdmin(admin.ModelAdmin):
 
     content_object.short_description = _("Content Object")
     content_object.allow_tags = True
+
+    def target_object(self, obj):
+        if not obj.target_object:
+            return
+
+        name = "admin:{}_{}_change".format(
+            obj.target_content_type.app_label,
+            obj.target_content_type.model,)
+
+        return _T(
+            '''<a href="{% url name id %}">{{o}}</a>''',
+            name=name, id=obj.target_object_id, o=obj.target_object)
+
+    target_object.short_description = _("Target Object")
+    target_object.allow_tags = True
 
 
 def register(app_fullname, admins, ignore_models=[]):
