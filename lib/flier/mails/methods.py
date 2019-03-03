@@ -41,10 +41,10 @@ class MailTemplate(object):
 
         return message
 
-    def create_recipient(self, addr, sender=None, instance=None):
+    def create_recipient(self, addr, sender=None, instance=None, **kwargs):
         sender = sender or self.sender
         return sender.instance.create_recipient(
-            addr, content_object=instance)
+            addr, content_object=instance, **kwargs)
 
     def send_to(self, *address, **ctx):
         sender = ctx.get('sender', None)
@@ -63,12 +63,20 @@ class BaseMail(BaseMethod):
         # TODO: SHOULD BE configurable
         return 'plain'
 
+    @property
+    def text_body(self):
+        return self.body
+
+    @property
+    def html_body(self):
+        return self.html
+
     def rendered_message(self, **kwargs):
-        return template.Template(self.body).render(
+        return template.Template(self.text_body).render(
             template.Context(dict(kwargs, mail=self,)))
 
     def rendered_html(self, **kwargs):
-        return template.Template(self.html).render(
+        return template.Template(self.html_body).render(
             template.Context(dict(kwargs, mail=self,)))
 
     def create_message(self, recipient, **kwargs):
@@ -84,6 +92,15 @@ class BaseMail(BaseMethod):
                 self.rendered_html(recipient=recipient), "text/html")
 
         return message
+
+    def create_recipient(self, addr, **kwargs):
+        return self.sender.instance.create_recipient(
+            addr, content_object=self, **kwargs)
+
+    def send_to(self, addr, **kwargs):
+        '''Create Recipient, Mesaage and send it. (sync)'''
+        self.create_message(
+            self.create_recipient(addr, **kwargs), **kwargs).send()
 
     def active_recipients(self, basetime=None):
         return self.recipients.active_set()
