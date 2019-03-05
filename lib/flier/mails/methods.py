@@ -71,6 +71,10 @@ class BaseMail(BaseMethod):
     def html_body(self):
         return self.html
 
+    def rendered_subject(self, **kwargs):
+        return template.Template(self.subject).render(
+            template.Context(dict(kwargs, mail=self,)))
+
     def rendered_message(self, **kwargs):
         return template.Template(self.text_body).render(
             template.Context(dict(kwargs, mail=self,)))
@@ -84,8 +88,8 @@ class BaseMail(BaseMethod):
         :param flier.moddels.Recipient recipient:
         '''
         message = recipient.create_message(
-            subject=self.subject,
-            body=self.rendered_message(recipient=recipient),)
+            subject=self.rendered_subject(recipient=recipient, **kwargs),
+            body=self.rendered_message(recipient=recipient, **kwargs),)
 
         if self.html:
             message.attach_alternative(
