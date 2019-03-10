@@ -63,8 +63,11 @@ class SenderAdmin(admin.ModelAdmin):
 
 class RecipientAdmin(admin.ModelAdmin):
     list_filter = ('status', )
-    list_excludes = ('created_at', 'message', 'content_type', 'object_id', )
-    list_additionals = ('content_object', )
+    list_excludes = (
+        'created_at', 'message', 'content_type', 'object_id',
+        'target_content_type', 'target_object_id',
+    )
+    list_additionals = ('content_object', 'target_object', )
     date_hierarchy = 'sent_at'
     raw_id_fields = ('sender', 'to', )
     readonly_fields = (
@@ -95,13 +98,11 @@ class RecipientAdmin(admin.ModelAdmin):
     def content_object(self, obj):
         if not obj.content_object:
             return
-
-        name = "admin:{}_{}_change".format(
-            obj.content_type.app_label, obj.content_type.model,)
+        url = change_link(obj.content_object)
 
         return _T(
-            '''<a href="{% url name id %}">{{o}}</a>''',
-            name=name, id=obj.object_id, o=obj.content_object)
+            '''<a href="{{u}}">{{o}}</a>''', u=url,
+            id=obj.object_id, o=obj.content_object)
 
     content_object.short_description = _("Content Object")
     content_object.allow_tags = True
