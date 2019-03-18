@@ -96,9 +96,7 @@ def send_mail(mail, withbreak=True):
 
     # BEGIN:
     if mail.status == mail.STATUS_QUEUED:
-        mail.instance.prepare_sending()         # subclass prepare sending
-        mail.status = mail.STATUS_SENDING
-        mail.save()         # post_save signal fires again
+        mail.provide()()
 
     sender = mail.sender.instance               # Actual Sender
     recipients = mail.active_recipients()       # Mail Recipient list

@@ -212,6 +212,12 @@ class Mail(object):
         ''' prepare for sending. override this method'''
         pass
 
+    def provide(self):
+        '''Prepare Recipients and ready to send'''
+        self.instance.prepare_sending()     # subclass prepare sending
+        self.status = self.STATUS_SENDING
+        self.save()                         # post_save signal fires again
+
 
 class MailCancel(object):
 
