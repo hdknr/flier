@@ -125,7 +125,7 @@ def send_mail(mail, withbreak=True):
             return
 
         # Send mail to each recipient
-        msg = mail.create_message(recipient)
+        msg = mail.instance.create_message(recipient)
         msg.send()
 
         # Wait

@@ -38,5 +38,7 @@ class DomainAdmin(admin.ModelAdmin):
 
 class SmtpSenderAdmin(admin.ModelAdmin):
     list_filter = ('enabled', 'domain', )
+    search_fields = ['address', 'name', ]
+
 
 register(__name__, globals())
