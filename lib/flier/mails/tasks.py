@@ -72,6 +72,7 @@ def send_mail(mail, withbreak=True):
     '''
     mail = get_object(mail, models.Mail)
     job = getattr(send_mail, 'request', None)
+    logger.warn('send_mail(Mail:{})'.format(mail.id))
 
     if job:
         for cancel in mail.instance.mailcancel_set.filter(
@@ -96,7 +97,7 @@ def send_mail(mail, withbreak=True):
 
     # BEGIN:
     if mail.status == mail.STATUS_QUEUED:
-        mail.provide()()
+        mail.provide()
 
     sender = mail.sender.instance               # Actual Sender
     recipients = mail.active_recipients()       # Mail Recipient list
