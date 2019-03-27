@@ -24,8 +24,9 @@ class MailTemplate(object):
             return template.Template(self.instance.html).render(
                 template.Context(kwargs))
 
-    def build_message(self, recipient, bcc=(), **ctx):
-        bcc = bcc or tuple(self.bcc and self.bcc.split(',') or [])
+    def build_message(self, recipient,  **ctx):
+        bcc = ctx.get('bcc', tuple(self.bcc and self.bcc.split(',') or []))
+        cc = ctx.get('cc', [])
         if 'site' not in ctx:
             try:
                 ctx['site'] = Site.objects.get_current()
@@ -34,7 +35,7 @@ class MailTemplate(object):
         message = recipient.create_message(
             self.render_subject(to=recipient, mail=self, **ctx),
             self.render_body(to=recipient, mail=self, **ctx),
-            bcc=bcc)
+            bcc=bcc, cc=cc)
         if self.html:
             message.attach_alternative(
                 self.render_html(to=recipient, mail=self, **ctx), "text/html")
@@ -87,9 +88,18 @@ class BaseMail(BaseMethod):
         '''
         :param flier.moddels.Recipient recipient:
         '''
+        bcc = kwargs.get('bcc', ())
+        cc = kwargs.get('cc', ())
+        if 'site' not in ctx:
+            try:
+                ctx['site'] = Site.objects.get_current()
+            except:
+                pass
+
         message = recipient.create_message(
             subject=self.rendered_subject(recipient=recipient, **kwargs),
-            body=self.rendered_message(recipient=recipient, **kwargs),)
+            body=self.rendered_message(recipient=recipient, **kwargs),
+            cc=cc, bcc=bcc)
 
         if self.html:
             message.attach_alternative(
@@ -243,4 +253,4 @@ class Notification(object):
     def notify(self, instance, *address, **ctx):
         ctx['instance'] = instance
         address = address or (self.to, )
-        self.send_to(*address, **ctx)
+        self.send_to(*address, **ctx)  # BaseMail.send_to
