@@ -90,9 +90,9 @@ class BaseMail(BaseMethod):
         '''
         bcc = kwargs.get('bcc', ())
         cc = kwargs.get('cc', ())
-        if 'site' not in ctx:
+        if 'site' not in kwargs:
             try:
-                ctx['site'] = Site.objects.get_current()
+                kwargs['site'] = Site.objects.get_current()
             except:
                 pass
 
