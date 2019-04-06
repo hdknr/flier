@@ -105,6 +105,9 @@ class RecipientStatus(models.Model):
         help_text=_('Recipient Status Label Help'),
         max_length=100, null=True, blank=True, default=None)
 
+    invalid = models.BooleanField(
+        _('Invalid Status'), default=False)
+
     description = models.TextField(
         _('Recipient Status Description'),
         null=True, default=None, blank=True)
