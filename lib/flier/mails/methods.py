@@ -251,6 +251,9 @@ class Attachment(object):
 
 class Notification(object):
     def notify(self, instance, *address, **ctx):
+        if 'bcc' not in ctx and self.bcc:
+            ctx['bcc'] = self.bcc.split(',')
+
         ctx['instance'] = instance
         address = address or (self.to, )
         self.send_to(*address, **ctx)  # BaseMail.send_to
